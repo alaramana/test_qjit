@@ -1,0 +1,26 @@
+development:
+  delivery_method: :smtp
+  smtp_settings:
+    address: "smtp.gmail.com"
+    from: "support@qjitsu.com"
+    domain: "www.qjitsu.com"
+    port: 587
+    user_name: "support@qjitsu.com"
+    password: "password goes here"
+
+test:
+  delivery_method: :smtp
+  smtp_settings:
+    address: "smtp.gmail.com"
+    from: "support@qjitsu.com"
+    domain: "www.qjitsu.com"
+    port: 587
+    user_name: "support@qjitsu.com"
+    password: "password goes here"
+
+
+###
+###
+###  THIS FILE IS KEPT "SECRET" ON DEPLOYED SERVER INSTANCES, SEE THE "IT GUY"
+###
+###

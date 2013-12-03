@@ -1,0 +1,29 @@
+- if current_user.blank?
+  :javascript
+    window.location="/users/sign_in"
+-else
+  %a{:href=>"/"}
+    %img.bannerlogo(src="/assets/qjitsu_logo_banner.png")
+  .navbar.navbar-inverse
+    .navbar-inner
+      .container-fluid
+        %ul.nav.primarynav
+          %li{:class=>"#{"active" if params[:controller]=="dashboard"}"}
+            = link_to "DASHBOARD", dashboard_index_path
+          %li{:class=>"#{"active" if params[:controller]=="exam_questions"}"}
+            = link_to "QUESTIONS", exam_questions_path
+          %li{:class=>"#{"active" if params[:controller]=="medical_cases"}"}
+            = link_to "CASES", medical_cases_path
+          %li{:class=>"#{"active" if params[:controller].match(/^forem/)}"}
+            = link_to "COMMUNITY", "/forums"
+          %li{:class=>"#{"active" if params[:controller]=="about"}"}
+            = link_to "ABOUT QJITSU", about_path
+          - if current_user.role_id == 1 or current_user.role_id == 2
+            %li{:class=>"#{activate_admin_menu("#{params[:controller]}")}"}
+              = link_to "ADMINISTRATION", admin_users_path
+        - if user_signed_in?
+          %ul.nav.pull-right
+            %li{:class=>"#{"active" if params[:controller]=="myprofile"}"}
+              %span#userid{:style => "display:none"}= current_user.id
+              = link_to "MY PROFILE","/myprofile", :class=>"profile_email", :title =>"#{current_user.email}"
+            %li= link_to('LOGOUT', destroy_user_session_path, :method=>'delete')

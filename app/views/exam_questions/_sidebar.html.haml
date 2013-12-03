@@ -1,0 +1,86 @@
+.sidebar
+  .scoreboard
+    %h5 Correct In A Row
+    .score
+      %h1
+        = score_count(params[:action])
+    .infor
+      %strong
+        = level(score_count(params[:action]))
+  %br
+  %hr
+  .timer
+    %span
+      %strong Time On This Question
+    - if !@score.nil?
+      - if @score.correct == true or params[:action] == "exam_mode"
+        #countdown_pause
+          #timespent
+            .none=@score.time_taken
+          .timer
+            %span.minute> 00
+            \:
+            %span.second 00
+      -elsif (@score.correct == false && params[:action] == "sparring_mode")
+        #countdown_restart
+          #timespent
+            .none=@score.time_taken
+          .timer
+            %span.minute> 00
+            \:
+            %span.second 00
+    -else
+      #countdown
+        .timer
+          %span.minute> 00
+          \:
+          %span.second 00
+    %p
+      %strong m m s s
+  %br
+  %hr
+  .average_rating
+    %h5 Average Rating
+    - if question_feedback(@exam_question) =="Hidden"
+      %i Hidden
+    -else
+      .value.fist.gray
+      %div{:class=>"#{fist_rating(@exam_question.average_rating)}"}
+  .case_auther
+    %h5 Author
+    - if question_author(@exam_question) =="Hidden"
+      %i Hidden
+    -else
+      = link_to @exam_question.user.full_name, "#"
+      %div{:class=>"belt #{user_belt(@exam_question.user.belt)}"}
+
+    %h5 Assignment
+    %i
+      =@exam_question.objective.nil? ? "-none-" : @exam_question.objective.name
+    %h5 Created Date
+    %i 
+      =display_time(@exam_question.created_at)
+    -if @exam_question.created_at != @exam_question.updated_at
+      %h5 Last Modified
+      %i 
+        =display_time(@exam_question.updated_at)
+  %br
+  %hr
+  .case_history
+    %h5
+      %span [-] History
+    %div.history-list
+      - unless  @overview.empty?
+        - @overview.each do |x|
+          %h6{:class=>"#{question_answer_history_icons(x.correct)}"}
+            = display_time(x.created_at)
+  .clear
+  %br
+  %hr
+  .case_tags
+    %h5
+      %span [-] Tags
+      (#{@exam_question.tags.count})
+    - @exam_question.tags.each do |x|
+      .tags-list.tags-names.tags-list-names
+        = x.name

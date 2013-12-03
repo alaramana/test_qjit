@@ -1,0 +1,124 @@
+%h4 Question:
+.form_row
+  %p= @exam_question.question_prompt
+.image_row
+  .span12
+    -if @exam_question.photo.present?
+      %a.fancybox{:href => "#{@exam_question.photo.url}", :rel => "group", :title=>"#{@exam_question.photo_file_name}"}
+        %img.img-polaroid{:alt => "", :src => "#{@exam_question.photo.url(:small)}"}/
+      %br
+      %br
+.span12
+  - @exam_question.position.each do |x|
+    .well.well-answer
+      %h5
+        -if params[:action]=="exam_mode"
+          = @no_of_choice[x]
+          - if @exam_question.correct_answer == @no_of_choice[x]
+            %span{:style=>"color:green"}
+              .icon-arrow-left
+                Correct Answer
+            - if @score.answer == @no_of_choice[x]
+              #correct_answer
+                %i.icon-ok-sign
+          - else
+            - if @score.answer == @no_of_choice[x]
+              #correct_answer
+                %i.icon-remove-sign
+        -else
+          - if @score.answer == @no_of_choice[x]
+            #correct_answer
+              %i.icon-ok-sign
+          = @no_of_choice[x]
+          - if @score.answer == @no_of_choice[x]
+            %span{:style=>"color:green"}
+              .icon-arrow-left
+                Correct Answer
+      %p
+        %span.muted Explanation:
+        %br
+        = @explanations[x]
+.form_row.offset4.span3
+  = link_to "Next Question >>", sparring_mode_exam_questions_path(:page=>params[:page].to_i+1, :params=>@filters),:class=>"btn btn-block btn-primary next-qt" if !@nexts.last_page? && params[:action]=="sparring_mode"
+  = link_to "Next Question >>", exam_mode_exam_questions_path(:page=>params[:page].to_i+1, :params=>@filters),:class=>"btn btn-block btn-primary next-qt"  if @score.correct == true and !@nexts.last_page? && params[:action]=="exam_mode"
+
+  = link_to "I'm Done", exam_questions_path(:params=>@filters), :class=>"btn btn-block imdone" if @is_done.empty?
+  = link_to "I'm Done", overview_exam_questions_path(:exam=>params[:action], :params=>@filters), :class=>"btn btn-block imdone" if !@is_done.empty?
+
+.span11.comments-section
+  #accordion2.accordion
+    .accordion-group
+      .accordion-heading
+        %a.accordion-toggle.tags-list.tags-list-names{"data-parent" => "#accordion2", "data-toggle" => "collapse", :href => "#collapseComment"}
+          %span.toggle [-]
+          Comments
+      #collapseComment.accordion-body.collapse.in
+        .accordion-inner
+          .tabbable
+            %ul.nav.nav-tabs
+              %li.active
+                %a{"data-toggle" => "tab", :href => "#pane1"}
+                  = "Comments For This Question (#{@exam_question.comments.size})"
+              - unless @medical_case.nil?
+                %li
+                  %a{"data-toggle" => "tab", :href => "#pane2"}
+                    = "Comments For This Case (#{@medical_case.comments.size})"
+            .tab-content
+              #pane1.tab-pane.active
+                .rate-title
+                  Rate this question
+                .rate-stars
+                  - if @exam_question.ratings.rated_by?(current_user.id)
+                    %div.rateit.rateit5{"data-rateit-min"=>"0", "data-rateit-value"=>"#{@exam_question.ratings.rating_for_user(current_user.id).rate}", :name=>@exam_question.id, :id=>'question_rate'}
+                  -else
+                    %div.rateit.rateit5{"data-rateit-min"=>"0", :name=>@exam_question.id, :id=>'question_rate'}
+                  %div#error
+                .feedback
+                  = simple_form_for [@exam_question, Comment.new], :html=>{:novalidate=>true}, :remote=>true do |f|
+                    = hidden_field_tag :exam, params[:action]
+                    %input{:type=>"hidden", :name=>"page", :value=>"#{params[:page].to_i+1}"}
+                    = f.input :comment, :required=>false, :as=>"text" ,:input_html=>{:rows=>"3"}, :label=>false, :placeholder=>"comment about this question"
+                    .offset4
+                      = f.submit "Add comment", :class=>"btn-primary btn btn-mini"
+                %hr
+                .community-comments
+                  - @exam_question.comments.each do  |cmt|
+                    .details
+                      .field.span12
+                        %a.value= link_to cmt.user, "#"
+                        %span{:class=>"belt #{user_belt(cmt.user.belt)}"}
+                        .value.fist.gray
+                        %div{:class=>"#{exam_question_rating(@exam_question,  cmt.user)}"}
+                        .pull-right= display_time(cmt.created_at,:B_e_Y)
+                        .message
+                          = cmt.comment
+
+              - unless @medical_case.nil?
+                #pane2.tab-pane
+                  .rate-title
+                    Rate this case
+                  .rate-stars
+                    - if @medical_case.ratings.rated_by?(current_user.id)
+                      %div.rateit.rateit5{"data-rateit-min"=>"0", "data-rateit-value"=>"#{@medical_case.ratings.rating_for_user(current_user.id).rate}", :name=>@medical_case.id, :id=>"mcase_rate"}
+                    - else
+                      %div.rateit.rateit5{"data-rateit-min"=>"0", :name=>@medical_case.id, :id=>"mcase_rate"}
+                    %div#error-case
+                  .feedback
+                    = simple_form_for [@medical_case, Comment.new], :html=>{:novalidate=>true}, :remote=>true do |f|
+                      = hidden_field_tag :exam, params[:action]
+                      %input{:type=>"hidden", :name=>"page", :value=>"#{params[:page].to_i+1}"}
+                      = f.input :comment, :required=>false, :as=>"text" ,:input_html=>{:rows=>"3"}, :label=>false, :placeholder=>"comment about this case"
+                      .offset4
+                        = f.submit "Add comment", :class=>"btn-primary btn btn-mini"
+                  %hr
+                  .community-case-comments
+                    -@medical_case.comments.each do |cmt|
+                      .details
+                        .field.span12
+                          %a.value= link_to cmt.user, "#"
+                          %span{:class=>"belt #{user_belt(cmt.user.belt)}"}
+                          .value.fist.gray
+                          %div{:class=>"#{exam_medical_case_rating(@medical_case, cmt.user)}"}
+                          .pull-right= display_time(cmt.created_at,:B_e_Y)
+                          .message
+                            = cmt.comment

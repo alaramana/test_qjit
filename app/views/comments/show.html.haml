@@ -1,0 +1,10 @@
+= simple_form_for @comment,                                                                     |
+  :url => { :controller =>"#"}, :html => { :class => 'form-horizontal' },:remote => true do |f| |
+  = f.input :title
+  = f.input :comment
+  = f.button :submit, :class => 'btn-primary' , :id =>"medical_case_comments"
+  = link_to t('.cancel', :default => t("helpers.links.cancel")), |
+    comments_path, :class => 'btn'                               |
+- @comments.each do |comment|
+  = comment.title
+  = comment.comment

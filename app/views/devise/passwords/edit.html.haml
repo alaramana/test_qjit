@@ -1,0 +1,18 @@
+= bootstrap_flash
+.loginform.pass-reset-form
+  = form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put },:validate => true) do |f|
+    %img(src="/assets/qjitsu_logo_large.png")
+    = f.hidden_field :reset_password_token
+    .control-group
+      = f.password_field :password,:maxlength => 50, :label=>false , :autofocus => true,  :placeholder=> 'new password', :style=>"width: 82%;"
+    .control-group
+      = f.password_field :password_confirmation,:maxlength => 50, :label=>false,  :placeholder=> 'confirm new password', :style=>"width: 82%;"
+    .buttontray
+      = link_to 'Sign In', user_session_path,:class =>"clearfix pull-right"
+      = f.submit "Change my password", :class =>"btn btn-primary pull-left "
+    .clearfix
+
+/[if IE]
+  :javascript
+    add_placeholder('user_password', 'new password');
+    add_placeholder('user_password_confirmation', 'confirm new password');

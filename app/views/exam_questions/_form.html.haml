@@ -1,0 +1,118 @@
+= simple_form_for @exam_question, :validate=>true, :html => { :class => 'exam_question_form form-horizontal', :multipart => true } do |f|
+  .modal-header
+    %button.close(type="button" data-dismiss="modal" aria-hidden="true") &times
+    %h3 Make a New Question
+  #next.demoarea
+    .modal-body
+      .row-fluid
+        .span3
+          %ul.nav.nav-list.nav-tabs.nav-stacked
+            %li.first-tab.active
+              %a(href="#general-case-info" data-toggle="tab")
+                %i.icon-chevron-right.pull-right
+                Question
+            %li.answertab
+              %a(href="#medical-history" data-toggle="tab")
+                %i.icon-chevron-right.pull-right
+                Answer
+            %li.disabled
+              %a(href="#review-of-systems" data-toggle="tab")
+                %i.icon-chevron-right.pull-right
+                Educational Purpose
+            %li.last-tab.disabled
+              %a(href="#add-tags" data-toggle="tab")
+                %i.icon-chevron-right.pull-right
+                Tags
+        .span9
+          .tab-content
+            #general-case-info.tab-pane.active
+              .form
+                .row-fluid
+                  .span2
+                    %label.muted Assignment
+                  .span10
+                    = hidden_field_tag('authenticity_token', form_authenticity_token.to_s)
+                    =f.association :objective,:collection=>@opened_assignments,
+                     :label=>false, prompt: "--select--",:input_html=>{:rows=>"7"}
+
+                %br
+                .row-fluid.text-area
+                  .span12
+                    %label.muted.required Question Prompt
+                    = f.input :question_prompt, :required=> false, :label=>false, :input_html=>{:rows=>"7", :class=>"span12 validate"}
+                %hr
+                .text-area
+                  .span12
+                    = f.input :photo , :label=> "Add Image"
+                    %hr
+                    - if f.object.new_record?
+                      %div.photolist.span9.none
+                        #photo_name.span5
+                        %a.btn.btn-danger.btn-mini.pull-right.delete_img Delete
+                    -else
+                      - if f.object.photo_file_name.present?
+                        %div.photolist.span9.none
+                          #photo_name.span5
+                            = f.object.photo_file_name
+                          %a.btn.btn-danger.btn-mini.disp-btn.pull-right.delete_img Delete
+                      - else
+                        %div.photolist.span9.none
+                          #photo_name.span5
+                          %a.btn.btn-danger.btn-mini.pull-right.delete_img Delete
+            #medical-history.tab-pane
+              .form
+                .answer_fields
+                  %i.icon-sign
+                  = f.input :correct_answer, :label=>"Correct Answer *", :input_html=>{ :class=>"validate"}
+                  = f.input :correct_answer_explanation, :label=>"Correct Answer Explanation(why this most appropriate option)", :input_html=>{:rows=>"2", :class=>" span12" }
+                .answer_fields
+                  = f.input :incorrect_1, :label=>"Incorrect Answer #1 *", :input_html=>{  :class=>"validate"  }
+                  = f.input :incorrect_1_explanation, :label=>"Incorrect Answer #1 Explanation", :input_html=>{:rows=>"2", :class=>" span12" }
+                %span.pull-right
+                  /= link_to_add_table_fields  "+ Add Incorrect Answer",  f, :incorrect_answers
+                %table.table
+                  %tbody#incorrect_answers
+                    - i = 1
+                    = f.simple_fields_for :incorrect_answers do |c|
+                      - i= i + 1
+                      = render 'incorrect_answer_fields', :f => c, :i=>i
+
+            #review-of-systems.tab-pane
+              .form
+                .row-fluid.text-area
+                  .span12
+                    %label.muted Educational Purpose
+                    = f.input :educational_purpose, :label=>false, :input_html=>{:class=>"span12"}
+            #add-tags.tab-pane
+              .row-fluid
+                %h4.text-info Tags
+              .form
+                .row-fluid
+                  .span5.offset7.text-area
+                    = f.input :tag_list,:input_html => {:class => 'case_tag field span12' },:label =>false, :placeholder=>"add tag"
+                .row-fluid
+                  .span12
+                    %div.error_tag
+                    .case_others_list.tags-list
+                      =f.hidden_field :tag_list, :class=>'new-tag'
+                %br
+                %hr
+                .row-fluid
+                  .span2{:style=>"width: 17%;"}
+                    %label.muted Case Association
+                  .span7
+                    = f.association :medical_case,  :collection=>@medical_cases, :label=> false, :prompt=>"-- select case association --"
+                    %input{:type=>"hidden", :name=>"search", :id=>"filter_results",  :value=>""}
+    .modal-footer
+      %a.cancel(data-dismiss="modal" aria-hidden="true") Cancel
+      .prev-next
+        %a.btn.btn-primary.prev.disabled(href="#")
+          %i.icon-chevron-left
+          Previous
+      //%a.btn.btn-primary.save-case(href="#" onclick="formQuestionSave();") Save
+      %a.btn.btn-success.disabled(href="#" onclick="submitModelForm();") Submit
+      .prev-next
+        %a.btn.btn-primary.next(href="#")
+          Next
+          %i.icon-chevron-right
+

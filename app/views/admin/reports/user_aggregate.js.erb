@@ -1,0 +1,6 @@
+$("#user_aggregate").append("<%= j render('user_aggregate')%>");
+<% unless @users.last_page? %>
+  $(".pagination").replaceWith("<%= j paginate @users %>");
+<% else %>
+  $('.pagination').remove();
+<% end %>

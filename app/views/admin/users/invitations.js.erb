@@ -1,0 +1,6 @@
+$("#invitations").append("<%= j render('invitations')%>");
+<% unless @invitations.last_page? %>
+  $(".pagination").replaceWith("<%= j paginate @invitations %>");
+<% else %>
+  $('.pagination').remove();
+<% end %>

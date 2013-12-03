@@ -1,0 +1,65 @@
+- if params[:invitation_token]
+  - @val = varify_invitation_token(params[:invitation_token])
+
+.regform
+  .centerme
+    %img(src="/assets/qjitsu_logo_large.png")
+    =  form_for(resource, :as => resource_name, :url => registration_path(resource_name),:validate => true ,:html => { :class => 'form-horizontal formcontainer' }) do |f|
+      .control-group
+        %label.control-label.required First Name:
+        =f.text_field :firstname,:maxlength => 40
+      .control-group
+        %label.control-label.required Last Name:
+        = f.text_field :lastname, :maxlength => 40
+      .control-group
+        %label.control-label.required Username:
+        / = f.text_field :username, :maxlength => 40
+        - if params[:invitation_token] && @val
+          = f.email_field :email ,readonly: true,  :value => "#{@val.email}"
+        - else
+          = f.email_field :email, :maxlength => 150
+      .control-group
+        %label.control-label.required Password:
+        = f.password_field :password, :maxlength => 50
+      .control-group
+        %label.control-label.required Re-Enter Password:
+        = f.password_field :password_confirmation, :maxlength => 50
+      .control-group
+        %label.control-label School:
+        .userorgs
+          - if params[:invitation_token] && @val
+            = @val.medical_organization.name
+      .control-group
+        %label.control-label Address 1:
+        = f.text_field :address1, :maxlength => 50
+      .control-group
+        %label.control-label Address 2:
+        = f.text_field :address2, :maxlength => 50
+      .control-group
+        %label.control-label City:
+        = f.text_field :city, :maxlength => 50
+      .control-group
+        %label.control-label State:
+        =f.select :state_id, State.all.collect {|x| [x.name, x.id]}, { :prompt => '--Select--'}
+      .control-group
+        %label.control-label Zip:
+        = f.text_field :zip,:as => :string, :maxlength => 10
+      .control-group
+        %label.control-label.required Email:
+        - if params[:invitation_token] && @val
+          = f.email_field :email ,readonly: true,  :value => "#{@val.email}"
+        - else
+          = f.email_field :email, :maxlength => 150
+      .control-group
+        %label.control-label Phone:
+        = f.text_field :phone,:as => :string  , :maxlength => 20
+
+      .control-group
+        %label.control-label.required Time Zone:
+        = time_zone_select("user","time_zone",ActiveSupport::TimeZone.us_zones, :default => "Pacific Time (US & Canada)")
+
+      .buttontray.centerme-reg
+        = f.submit "Create Account", :class => "btn btn-primary"
+        |
+        = link_to "Login", user_session_path
+    .clearfix

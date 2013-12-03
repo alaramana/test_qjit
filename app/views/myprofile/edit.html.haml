@@ -1,0 +1,111 @@
+.sectionpad
+  .tabbable
+    %ul.nav.nav-tabs
+      %li.active
+        %a(href="/myprofile/")Account
+      %li
+        %a(href="/myprofile/user_cases" )Cases
+      %li
+        %a(href="/myprofile/user_history") History
+    .tab-content
+      #users_status(class="tab-pane active")
+        .row
+          .span7
+            %h3#account-info Account
+            = form_for @user, :url => "/profile", :as  => :user,:method => :put,:validate =>true, :html => { :class => 'form-horizontal' } do |f|
+              .control-group
+                %label.control-label.required First Name:
+                =f.text_field :firstname, :maxlength => 40
+              .control-group
+                %label.control-label.required Last Name:
+                = f.text_field :lastname, :maxlength => 40
+              .control-group
+                %label.control-label.required Username:                
+                .controls.readonly.word-wrap= @user.email
+                #reset-cancel
+                  .btn.btn-mini Cancel
+                #reset.resetbtn
+                  %input{:type=>"button", :class=>"btn btn-mini  ", :value=>"Reset Password"}
+
+              #password-reset
+                .control-group
+                  %label.control-label Password:
+                  #errorpassowrd
+                  = f.password_field :password, disabled: true, :maxlength => 50
+                .control-group
+                  %label.control-label Re-Enter Password:
+                  = f.password_field :password_confirmation, disabled: true, :maxlength => 50
+
+              .control-group
+                %label.control-label School:
+                - if current_user.role_id==1 or current_user.role_id == 2
+                  =f.select :medical_organization_id, 
+                  @acitve_medical_organizations, { :prompt => '--Select--'}
+                - else
+                  .controls.readonly
+                    = @user.medical_organization.name
+              %br
+              .control-group
+                %label.control-label Address 1:
+                = f.text_field :address1, :maxlength => 50
+              .control-group
+                %label.control-label Address 2:
+                = f.text_field :address2, :maxlength => 50
+              .control-group
+                %label.control-label City:
+                = f.text_field :city, :maxlength => 50
+              .control-group
+                %label.control-label zip:
+                = f.text_field :zip, :maxlength => 10
+              .control-group
+                %label.control-label State:
+                =f.select :state_id, @states, { :prompt => '--Select--'}
+              %br
+              .control-group
+                %label.control-label.required Email:
+                .old_email
+                  = f.text_field :email, :maxlength =>  150              
+                .new_email
+                  %input{:type=>"hidden", :value=>"#{f.object.unconfirmed_email}"}
+              .control-group
+                - if f.object.unconfirmed_email.present?
+                  .invalid 
+                    .icon-flag                  
+                      %span #{f.object.unconfirmed_email}                  
+                      not validated
+                      .btn.btn-info#resent_email Resend
+                -else
+                  .validated
+                    .icon-flag                    
+                      validated
+              .control-group
+                %label.control-label Phone:
+                = f.text_field :phone,:as => :string , :maxlength => 20
+              %br
+              .control-group
+                %label.control-label.required Time Zone:
+                = time_zone_select("user","time_zone",ActiveSupport::TimeZone.us_zones, :default => "Pacific Time (US & Canada)")
+              .buttontray.centerme.pull-right.edituser-submit
+                = f.submit "Save", :class => "btn btn-primary resent_email"
+
+          .span4
+            .span6
+              .sectioncontainer
+                %h4  QJitsu Ranking
+                .row
+                  .beltmeasure.span1
+                    %img(src="/assets/belt-#{current_user.belt}.png")
+                    .beltbadge.redbelt
+                      #{current_user.belt.upcase} BELT
+                  / .beltdescription.span3
+                  /   %h4 INTERMEDIATE
+                  /   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              .sectioncontainer
+                %h4 Highest Correct In A Row Combo
+                .measure
+                  = user_report_high_score(current_user,"exam_mode")
+                  .meritbadge.fistsoffury
+                    = level(user_report_high_score(current_user, "exam_mode"))
+                    %img(src="/assets/icon_fistsoffury.png")
+
+

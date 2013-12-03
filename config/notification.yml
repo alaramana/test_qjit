@@ -1,0 +1,15 @@
+development:
+  sender: "notifier <support@qjitsu.com>"
+  recipient: "admin@qjitsu.com"
+
+test:
+  sender: "notifier <support@qjitsu.com>"
+  recipient: "admin@qjitsu.com"
+
+qa:
+  sender: "Qjitsu QA Server <no-reply@qjitsu.com>"
+  recipient: "errors@qjitsu.com"
+
+production:
+  sender: "Qjitsu App Server <no-reply@qjitsu.com>"
+  recipient: "errors@qjitsu.com"

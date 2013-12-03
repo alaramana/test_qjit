@@ -1,0 +1,50 @@
+=hidden_field_tag :qdir, sort_direction
+=hidden_field_tag :qcol, sort_column
+
+.pull-left
+  =paginate @users, :theme => 'qpaginate'
+
+.btn-group.pull-right
+  %button.btn.btn-default.dropdown-toggle{:type => "button", :'data-toggle'=>"dropdown"}
+    Download
+    %span.caret
+  %ul.dropdown-menu{:role=>"menu"}
+    %li= link_to "CSV", {format: "csv", params: params.merge({:page=>nil})}
+    %li= link_to "Excel", {format: "xls", params: params.merge({:page=>nil})}
+
+%table.table.table-striped.clear
+  %thead
+    %tr
+      %th{:style=>"width:140px;"}= qsortable "lastname", "Last Name"
+      %th{:style=>"width:140px;"}= qsortable "firstname", "First Name"
+      %th{:style=>"width:360px;"}= qsortable "email"
+      %th.c-text=  qsortable "questions_count", "Total Questions"
+      %th.c-text=  qsortable "comments_count",  "Total Comments"
+      %th.c-text=  qsortable "ratings_count",   "Total Ratings"
+  %tbody
+    - if !@users.empty? and @users.count.size > 0
+      - @u = []
+      - @users.each do |user|
+        %tr
+          %td.wrap= user.lastname
+          %td.wrap= user.firstname
+          %td=user.email
+          /%td.c-text= link_to user.questions_count, "#", :class=>"list-question", :obj=>@filters.exam_questions_objective_id_in,  :from=>@filters.created_at_gte, :to=>@filters.created_at_lte, :id=> user.id, "data-toggle"=>"modal"
+          %td.c-text= user.questions_count
+          %td.c-text= user.comments_count
+          %td.c-text= user.ratings_count
+    - else
+      %tr
+        %td{:colspan=>7}
+          .alert.alert-info
+            No records found
+
+
+/#myModal.modal.hide.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+/  .modal-header
+/    %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+/    %h3#myModalLabel Questions
+/  .modal-body
+/    #question-prompts
+/  .modal-footer
+/    %button.btn.btn-danger{"aria-hidden" => "true", "data-dismiss" => "modal"} Close

@@ -1,0 +1,81 @@
+.sectionpad
+  .tabbable
+    %ul.nav.nav-tabs
+      %li
+        %a(href="/myprofile/")Account
+      %li
+        %a(href="/myprofile/user_cases" )Cases
+      %li.active
+        %a(href="/myprofile/user_history") History
+    .tab-content
+      #users_status(class="tab-pane active")
+        #accordion2.accordion
+          .accordion-group
+            .accordion-heading-two
+              %a.accordion-toggle{"data-parent" => "#accordion2", "data-toggle" => "collapse", :href => "#collapseTwo"}
+                %span.toggle [+]
+                Exam Mode Results
+            #collapseTwo.accordion-body.collapse
+              .accordion-inner
+                - if  !@test_mode.empty?
+                  - @test_mode.each do  |exam_no, result|
+                    %table.table.table-bordered.table-striped
+                      %caption
+                        %h5
+                          %i Exam Test - #{exam_no}
+                      %thead
+                        %tr
+                          %th.span8 Exam Question Title
+                          %th.c-text Time Taken (sec)
+                          %th.c-text Answer
+                          %th status
+                      %tbody
+                        - result.each do |x|
+                          %tr
+                            %td= x.exam_question.question_prompt
+                            %td.c-text= x.time_taken
+                            %td.c-text
+                              %i{:class=>"#{ x.correct==true ? "icon-ok" : "icon-remove" }"}
+                            %td= x.status
+                    %hr
+
+                -else
+                  .span5
+                    .alert.alert-info{:style=>"text-align: center;"}
+                      No exam prepared
+
+          .accordion-group
+            .accordion-heading-three
+              %a.accordion-toggle{"data-parent" => "#accordion2", "data-toggle" => "collapse", :href => "#collapseOne"}
+                %span.toggle [+]
+                Sparring Mode Results
+            #collapseOne.accordion-body.collapse
+              .accordion-inner
+                - if !@sparring_mode.empty?
+                  - @sparring_mode.each do  |exam_no, result|
+                    %table.table.table-bordered.table-striped
+                      %caption
+                        %h5
+                          %i Sparring Test - #{exam_no}
+                      %thead
+                        %tr
+                          %th.span8 Exam Question Title
+                          %th.c-text Time Taken (sec)
+                          %th.c-text Number of Attempt
+                          %th.c-text Answer
+                          %th status
+                      %tbody
+                        - result.each do |x|
+                          %tr
+                            %td= x.exam_question.question_prompt
+                            %td.c-text= x.time_taken
+                            %td.c-text= x.attempt
+                            %td.c-text
+                              %i{:class=>"#{ x.correct==true ? "icon-ok" : "icon-remove" }"}
+                            %td= x.status
+                    %hr
+                -else
+                  .span5
+                    .alert.alert-info{:style=>"text-align: center;"}
+                      No exam prepared
+

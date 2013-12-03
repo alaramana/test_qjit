@@ -1,0 +1,85 @@
+%li.box
+  .heading
+    %h4
+      //{:class=>"#{answer_status_icons(mcase.id)}"}
+      = link_to mcase.title, medical_case_path(mcase, params)
+    /--------- Model Favorite-----------/
+    = link_to content_tag(:i, '',  :class => "#{is_favorite(current_user.id, mcase)}"), "#",:name => "#{mcase.title}",  :title => "#{ is_favorite(current_user.id, mcase) == "cstar" ? :"Remove favorite" : "Add favorite" }", :class => "status", :id => "#{mcase.id}"
+
+    .actions
+      .dropdown
+        - if current_user.role_id !=3
+          .btn-group
+            %button.btn Action
+            %button.btn.dropdown-toggle(data-toggle="dropdown")
+              %span.caret
+            %ul.dropdown-menu
+              %li
+                = link_to  "Inactive", inactive_medical_case_path(mcase), :method=> :post , :confirm => 'Are you sure, want to make it inactive?'   if mcase.status != "inactive"
+              %li
+                = link_to  "Draft", draft_medical_case_path(mcase), :method=> :post, :confirm => 'Are you sure, want to make it draft?'  if mcase.status != "draft"
+              %li
+                = link_to  "Pending", pending_medical_case_path(mcase), :method=> :post, :confirm =>  'Are you sure, want to make it pending?'   if mcase.status != "pending"   and mcase.status != "draft"
+              %li
+                = link_to  "Approved", approved_medical_case_path(mcase), :method=> :post, :confirm =>   'Are you sure, want to make it approved?'   if mcase.status != "approved" and mcase.status != "inactive" and  mcase.status != "draft"
+              %li
+                - if mcase.status != "approved" and current_user.id == mcase.creator_id
+                  %a{:class=>"edit_wizard", :id=>mcase.id } Edit
+
+
+        /--------- Model Comments-----------/
+        %a.icon-comment{"data-toggle" => "modal", :href => "#comment-#{mcase.id}", :role => "button", :title =>"Comments", :class=>"#{"www" unless mcase.comments.empty?}"}
+
+        %div{:id=>"comment-#{mcase.id}", :class=>"modal hide fade", "aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1" }
+          .modal-header
+            %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+            %h3#myModalLabel Community Comments
+          .modal-body
+            - if mcase.comments.empty?
+              %h5.c-text
+                %i No comments
+            - else
+              .community-case-comments
+                - mcase.comments.each do |cmt|
+                  .field.span6
+                    %a.value= link_to cmt.user, "#"
+                    %span.belt{:class=>"#{user_belt(cmt.user.belt)}"}
+                    .pull-right= display_time(cmt.created_at,:B_e_Y)
+                    %p
+                      = cmt.comment
+                    %hr
+          .modal-footer
+            %button.pull-center.btn.btn-danger.secondary.confirm{"aria-hidden" => "true", "data-dismiss" => "modal"} Close
+        /--------- Model Tags-----------/
+        %a.icon-tag{"data-toggle" => "modal", :href => "#tag-#{mcase.id}", :role => "button", :title =>"Tags", :class=>"#{"www" unless mcase.tags.empty?}"}
+
+        %div{:id=>"tag-#{mcase.id}", :class=>"modal hide fade", "aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+          .modal-header
+            %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+            %h3#myModalLabel Tags
+          .modal-body
+            - if mcase.tags.empty?
+              %h5.c-text
+                %i No Tags
+            - else
+              - mcase.tags.each do |com|
+                .span.tag-head
+                  %span.tag
+                    =com.name
+          .modal-footer
+            %button.pull-center.btn.btn-danger.secondary.confirm{"aria-hidden" => "true", "data-dismiss" => "modal"} Close
+  .details
+    .field.span5
+      %label Author:
+      %a.value= link_to mcase.user.full_name, "#" unless mcase.user.nil?
+      %span.belt{:class=>"#{user_belt(mcase.user.belt)}"}
+    .field.span3
+      %label Average Rating:
+      .value.fist.gray
+      %div{:class=>"#{medical_case_average_rating(mcase)}"}
+    .field.span2
+      %label Your Rating:
+      .value.fist.gray
+      - if mcase.ratings.rated_by?(current_user.id)
+        %div{:class=>"#{fist_rating(mcase.ratings.rating_for_user(current_user.id).rate)}"}
+      

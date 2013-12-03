@@ -1,0 +1,30 @@
+<h2><%= t('forem.admin.group.index') %></h2>
+<%= link_to t('back_to_admin', :scope => "forem.admin"), forem.admin_root_path %><br><br>
+<%= link_to t('forem.admin.group.new'), forem.new_admin_group_path, :class => "btn btn-primary" %>
+<hr />
+<table id='groups forums' class='index forums table table-striped' cellspacing='0'>
+  <thead>
+    <tr>
+      <th class="span8"><%= t('name', :scope => 'forem.admin.groups') %></th>
+      <th class="span1"><%= t('edit', :scope => 'forem.admin.groups') %></th>
+      <th class="span1"><%= t('delete', :scope => 'forem.admin.groups') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @groups.each do |group| %>
+      <tr>
+        <td>
+          <%= link_to forem_emojify(group.name), forem.admin_group_path(group) %>
+        </td>
+      <td>
+          <%= link_to t('edit', :scope => 'forem.admin.groups'), forem.admin_group_path(group), :class => "btn btn-info"  %>
+        </td>
+        <td>
+          <%= link_to t('delete', :scope => 'forem.admin.groups'), forem.admin_group_path(group), :method => :delete, :class => "btn btn-danger" %>
+        </td>
+
+
+      </tr>
+    <% end %>
+  </tbody>
+</table>

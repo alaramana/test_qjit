@@ -1,0 +1,54 @@
+- if @medical_cases.present?
+  - @medical_cases.each_with_index do |mcase, i|
+    / = render 'shared/medical_cases', mcase:  mcase, i: i #For User view
+    %li.box
+      .heading
+        %h4
+          = link_to mcase.title, medical_case_path(mcase, params)
+        /--------- Model Favorite-----------/
+        = link_to content_tag(:i, '',  :class => "#{is_favorite(current_user, mcase.id)}"), "#",:name => "#{mcase.title}",  :title => "#{ is_favorite(current_user, mcase.id) == "cstar" ? :"Remove favorite" : "Add favorite" }", :class => "status", :id => "#{mcase.id}"
+
+        .actions
+          .dropdown
+            - if current_user.role_id !=3
+              .btn-group
+                %button.btn Action
+                %button.btn.dropdown-toggle(data-toggle="dropdown")
+                  %span.caret
+                %ul.dropdown-menu
+                  %li
+                    = link_to  "Inactive", inactive_medical_case_path(mcase), :method=> :post , :confirm => 'Are you sure, want to make it inactive?'   if mcase.status != "inactive"
+                  %li
+                    = link_to  "Draft", draft_medical_case_path(mcase), :method=> :post, :confirm => 'Are you sure, want to make it draft?'  if mcase.status != "draft"
+                  %li
+                    = link_to  "Pending", pending_medical_case_path(mcase), :method=> :post, :confirm =>  'Are you sure, want to make it pending?'   if mcase.status != "pending"   and mcase.status != "draft"
+                  %li
+                    = link_to  "Approved", approved_medical_case_path(mcase), :method=> :post, :confirm =>   'Are you sure, want to make it approved?'   if mcase.status != "approved" and mcase.status != "inactive" and  mcase.status != "draft"
+                  %li
+                    - if mcase.status != "approved" and current_user.id == mcase.creator_id
+                      %a{:class=>"edit_wizard", :id=>mcase.id } Edit
+
+
+            /--------- Model Comments-----------/                  
+            %a.icon-comment{:id=>mcase.id, :class=>"#{"www" if mcase.comments.present?}", :name=>"mcase", :title =>"Comments"}        
+            /--------- Model Tags-----------/
+            %a.icon-tag{:id=>mcase.id , :class=>"#{"www" if mcase.tags.present?}", :name=>"mcase", :title =>"Tags"}
+   
+      .details
+        .field.span5
+          %label Author:
+          %a.value= link_to mcase.user.full_name, "#" unless mcase.user.nil?
+          %span.belt{:class=>"#{user_belt(mcase.user.belt)}"}
+        .field.span3
+          %label Average Rating:
+          .value.fist.gray
+          %div{:class=>"#{fist_rating(mcase.average_rating)}"}
+        .field.span2
+          %label Your Rating:
+          .value.fist.gray
+          - if mcase.ratings.rated_by?(current_user.id)
+            %div{:class=>"#{fist_rating(mcase.ratings.rating_for_user(current_user.id).rate)}"}
+- else
+  .span12
+    .alert.alert-info.exam-alert
+      No records found

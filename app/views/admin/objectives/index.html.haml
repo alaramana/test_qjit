@@ -1,0 +1,51 @@
+.sectionpad
+  .tabbable
+    %ul.nav.nav-tabs
+      %li
+        %a(href="/admin/users")Users
+      %li
+        %a(href="/admin/medical_organizations" )Orgs
+      %li
+        =link_to "Cases", user_cases_admin_users_path
+      %li
+        =link_to "Invitations", invitations_admin_users_path
+      %li
+        = link_to "Reports",admin_reports_path
+      %li
+        = link_to "Races",admin_races_path
+      %li.active
+        = link_to "Assignments",admin_objectives_path
+    .tab-content
+      #orgs(class="tab-pane active")
+        .buttontray
+          %span.pull-left View:
+          .span6
+            = form_for "search", :action=>"objectives", :method=>"get" do |f|
+              = f.select("status_is_true", [["All", "all"],["Active", "active"], ["Suspended", "suspended"]], :selected => @filters.status_is_true )
+          .pull-right
+            = link_to "+ Add",  new_admin_objective_path, :class => 'btn btn-primary medical_new pull-right'
+        %table.table.table-striped
+          %thead
+            %tr
+              %th{:width=>"100px"}
+              %th.span4= sortable_column "Name", :column => "name"
+              %th.span3= sortable_column "Org", :column => "medical_organization_id"
+              %th.span3= sortable_column "Start Date", :column => "start_date"
+              %th.span3= sortable_column "End Date", :column => "end_date"
+              %th.span2= sortable_column "Status", :column => "situation"
+          %tbody#objectives
+            = render "objectives"
+            .none= paginate @objectives
+#modal-from-dom.modal.hide.fade
+  .modal-header
+    %button.close{"data-dismiss" => "modal", :type => "button"} &times;
+    %h3 Assignment
+  .modal-body
+    %p Do you want to proceed?
+  .modal-footer
+    %a#yes_id.btn.btn-primary.danger.confirm Yes
+    %a#no_id.btn.btn-danger.secondary.confirm{"data-dismiss" => "modal", :type => "button"} No
+
+
+
+

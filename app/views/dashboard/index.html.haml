@@ -1,0 +1,101 @@
+.sectionpad
+	.row-fluid
+		.span9
+			.row-fluid
+				.span9
+					%h2 Welcome Back, #{current_user.firstname}
+				.span3.text-right
+					%small <strong>Last Login</strong>
+					%p #{display_time(current_user.last_sign_in_at)}
+
+			%h4 Most Recent Assignments
+
+			-showing = @assignments.count>3?3:@assignments.count
+			-total   = @assignments.count
+			.disclosable{:data => {'total-count' => showing, 'disclose-count' => total}}
+				%table.table.table-striped
+					%thead
+						%tr
+							%th	Assignment
+							%th.text-right	Status
+					%tbody
+						-@assignments.each_with_index do |a,i|
+							%tr{:class => ("disclosee" if i>2)}
+								%td
+									%div=a.name
+									%div.muted=a.description || "no description"
+								%td.text-right=fancy_status(a)
+				-if(total>3)
+					%p 
+						Showing <em class="disclose-count">#{showing}</em> of <em>#{total}</em> total assignments
+						%a.btn.btn-small.discloser Show More
+			%br
+			%h4 Most Recent Questions
+			-@questions.each do |q|
+				.qbadge.exam_question
+					.qbadge-content
+						.row-fluid
+							.span10
+								%h5
+									%span Q:
+									= link_to truncate(q.question_prompt,:length => 70), sparring_mode_exam_questions_path(:question=>q.id)
+							.span2.text-right        
+								.actions
+									%a.icon-pencil.edit_question{:id=>q.id, :title=>"Edit question"}
+									%a.icon-comment{:id=>q.id, :class=>"#{"www" if q.comments.present?}", :name=>"question", :title =>"Comments"}
+									%a.icon-tag{:id=>q.id , :class=>"#{"www" if q.tags.present?}", :name=>"question", :title =>"Tags"}
+         			
+
+					.qbadge-label.fill-bamboo
+						.row-fluid
+							.span3
+								%label 
+									Average Rating
+									- if question_feedback(q) =="Hidden"
+										%i Hidden
+									-else
+										.value.fist.gray            
+										%div{:class=>"#{fist_rating(q.average_rating)}"}
+							.span3
+								%label 
+									Your Rating:
+									.value.fist.gray
+									- if q.ratings.rated_by?(current_user.id)
+										%div{:class=>"#{fist_rating(q.ratings.rating_for_user(current_user.id).rate)}"}
+							.span6.text-right
+								%label Authored on #{display_time(q.created_at,:B_e_Y)}
+
+			=link_to("See all of my Questions",exam_questions_path(:search=>{:user_firstname_contains=>current_user.full_name})) 		
+
+
+		.span3
+			.well
+				%h4.text-center QJitsu Ranking
+				.qbadge
+					.qbadge-content.text-center
+						%img(src="/assets/belt-#{current_user.belt}-lg.png")
+					.qbadge-label.text-center{:class=>"fill-#{current_user.belt}"}
+						#{current_user.belt.upcase} BELT		
+	
+				%h4.text-center Most Consecutive<br/>Correct Answers
+				.qbadge
+					.qbadge-content.big.text-center= user_report_high_score(current_user,"exam_mode")
+					.qbadge-label.fill-blue.text-center
+						= level(user_report_high_score(current_user, "exam_mode"))
+						%img(src="/assets/icon_fistsoffury.png")
+	
+	
+//comments windows
+.comemnt_form.none
+	#comemnts.modal.fade.container{:style => "display: none;", :tabindex => "-1"}
+//tags windows
+.tags_form.none
+	#tags.modal.fade.container{:style => "display: none;", :tabindex => "-1"}
+//New Case form
+.case-form.none
+	#make-case.modal.fade.container{:style => "display: none;", :tabindex => "-1"}
+
+
+
+.clear
+

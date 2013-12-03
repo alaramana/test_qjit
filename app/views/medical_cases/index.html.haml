@@ -1,0 +1,136 @@
+.filtercontainer
+  %h3 Filter
+  .filter-fields
+    = form_for "search", :action=>"medical_case", :method=>"get", :html=>{:class=>"filter_forms"} do |f|
+      - if params[:search].present?
+        %input{:type=>"hidden", :name=>"search[title_contains]", :id=>"searchinputvalue", :value=>"#{@filters.title_contains}"}
+        %input{:type=>"hidden", :name=>"tag_name", :id=>"tag_name", :value=>params[:tag_name]}
+      - else
+        %input{:type=>"hidden", :name=>"search[title_contains]", :id=>"searchinputvalue", :value=>""}
+        %input{:type=>"hidden", :name=>"tag_name", :id=>"tag_name", :value=>""}
+      -if params[:order].present?
+        %input.order_field{:type=>"hidden", :name=>"order", :value=>params[:order]}
+      -else
+        %input.order_field{:type=>"hidden", :name=>"order", :value=>"average"}
+
+      .field
+        %label Average Rating
+        = f.select("average_rating_greater_than", [['Any', ''],['4+', 4],['3+', 3],['2+', 2],['1+', 1],], :selected => @filters.average_rating_greater_than )
+      .field
+        %label My Rating
+        = f.select("ratings_rate_greater_than", [['Any', ''],['4+', 4],['3+', 3],['2+', 2],['1+', 1]], :selected => @filters.ratings_rate_greater_than )
+      .field
+        %label Author
+        #auther_searchform
+          %input#search_user_firstname.author_with_autocomplete.ui-autocomplete-input{:autocomplete => "off", "data-autocompleteurl" => "/medical_cases/autocomplete_author_name", :name => "search[user_firstname_contains]", :size => "30", :type => "text", :value => @filters.user_firstname_contains, :placeholder=>"enter author"}/
+          %button.btn.none{:type => "submit"} GO
+      .field.group
+        %label.cstar-small Favorites
+        #my_favorite
+          =check_box_tag 'search[favorites_is_active_is_true]', 'yes', @filters.favorites_is_active_is_true=="yes"
+          Show My Favs Only
+          %button.btn.none{:type => "submit"} GO
+      .field.group
+        %label View Cases
+        #answers
+          %label
+            =check_box_tag 'search[score_boards_correct_is_true]', '1', @filters.score_boards_correct_is_true=="1"
+            %span.check-sign
+              I Got Correct
+          %label
+            =check_box_tag 'search[score_boards_correct_is_false]', '1', @filters.score_boards_correct_is_false=="1"
+            %span.x-sign
+              I Got Incorrect
+          %label
+            =check_box_tag 'not_answer', '1', params[:not_answer]=='1'
+            %span.question-sign
+              I Have Not Answered
+          %button.btn.none{:type => "submit"} GO
+      .clear-filters
+        = link_to "Clear all filters", medical_cases_path, :class=>"btn btn-primary"
+    .field.group
+      %label.floatleft
+        .minus-tag.pull-left [-]
+        Tags (#{@tags_count})      
+      .clear
+      .toggle_tag_form
+        %form#tags_form
+          %input#taginput.tags_with_autocomplete{:autocomplete =>"off", "data-autocompleteurl" => "/medical_cases/autocomplete_tag_name", :name => "tag", :size => "30", :type => "text", :placeholder=>"add tag"}/
+          %button.btn.none{:type => "submit"} GO
+        - if params[:tag_name].present?
+          - params[:tag_name].split(',').uniq.each do |name|
+            - unless !name.present?
+              .labels
+                =link_to content_tag(:span, "", :class=> "icon-remove remove_tag")+  name, "#",:class=>"btn btn-small btn-primary value"
+
+.contentcontainer
+  .headcontainer
+    .span4
+      = form_for @search, :id=>"medicals_search" do |f|
+        %input{:type=>"hidden", :name=>"filter_tag", :value=>"filter_tag"}
+        = f.text_field :title_contains, :id=>"searchinput",:value=>@filters.title_contains, :placeholder=>"search cases"
+        .none= f.submit "Search"
+
+    %label#sort Sort
+    .form-inline
+      = form_for "", :action=>"medical_case", :method=>"get", :html=>{ :class=>"order_form"} do |f|
+        = f.select("order", [['Highest Average Ratings', 'average'],['Highest Personal Ratings', 'personal'],['Most Recently Authored', 'created_at'],['Author','author']], :selected => params[:order])
+        .none= f.submit
+    .btn-group
+      - if 46 <= @qcount
+        = link_to "Take", exam_mode_exam_questions_path, :class=>"btn btn-primary"
+      -else
+        %a.btn.btn-primary{"data-toggle" => "modal", :href => "#myModal", :role => "button"} Take
+        #myModal.modal.hide.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+          .modal-body
+            %h5
+              =@medical_cases.size
+              Medical cases should be minimum 46 cases.
+              Please add medical cases.
+          .modal-footer
+            %button.btn{"aria-hidden" => "true", "data-dismiss" => "modal"} Close
+
+      %button.btn.btn-primary.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
+        Make
+        %span.icon-plus
+      %ul.dropdown-menu.pull-right
+        %li
+          = link_to "Question", "#", :id=>"create-question"
+        %li.divider
+        %li
+          / # = link_to "Case", "#", :id=>"open-new-wizard"
+          / %a(href="#make-case" data-toggle="modal") Case
+          %a(href="#" id="mcase" name="#{params}") Case
+
+
+
+
+  .listcontainer
+    %ul#medical_cases
+      = render "medical_cases"
+    .none= paginate @medical_cases
+
+//place holder scripts
+/[if IE]
+  :javascript
+    add_placeholder('searchinput', 'search cases');
+    add_placeholder('search_user_firstname', 'enter author');
+    add_placeholder('taginput', 'add tag');
+  :css
+    input#search_score_boards_correct_is_true, input#search_score_boards_correct_is_false, input#not_answer{
+      margin-top: 1px !important;
+    }
+
+
+// New Case form
+.case-form.none
+  #make-case.modal.fade.container{:style => "display: none;", :tabindex => "-1"}
+
+//comments windows
+.comemnt_form.none
+  #comemnts.modal.fade.container{:style => "display: none;", :tabindex => "-1"}
+
+
+//tags windows
+.tags_form.none
+  #tags.modal.fade.container{:style => "display: none;", :tabindex => "-1"}

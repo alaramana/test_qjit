@@ -1,0 +1,68 @@
+-if params[:case]=="draft"
+  .alert.fade.in.alert-success
+    %button.close.reload ×
+    Medical case stored as draft successfully.
+.sectionpad
+  .tabbable
+    %ul.nav.nav-tabs
+      %li
+        =link_to "Users" , admin_users_path
+      %li
+        =link_to "Orgs" , admin_medical_organizations_path
+      %li.active
+        =link_to "Cases", user_cases_admin_users_path
+      %li
+        =link_to "Invitations", invitations_admin_users_path
+      %li
+        = link_to "Reports",admin_reports_path
+      %li
+        = link_to "Races",admin_races_path
+      %li
+        = link_to "Assignments",admin_objectives_path
+    .tab-content
+      #users_status(class="tab-pane active")
+
+        .span3{:style=>"margin-top:30px;"}
+          = form_for "search", :action=>"/admin/users/user_cases", :method=>"get" do |f|
+            %h4 Filters
+            %span.pull-left View
+            = f.select("status_contains", [["All", ""],["Approved", "approved"], ["Pending", "pending"], ["Inactive", "inactive"], ["Draft","draft"]], :selected =>  @filters.status_contains )
+            %span.pull-left Average Rating
+            = f.select("average_rating_greater_than", [['Any', ''],['4+', 4],['3+', 3],['2+', 2],['1+', 1],], :selected => @filters.average_rating_greater_than )
+            %span.pull-left My Rating
+            = f.select("ratings_rate_greater_than", [['Any', ''],['4+', 4],['3+', 3],['2+', 2],['1+', 1]], :selected => @filters.ratings_rate_greater_than )
+            %input{:name => "search[user_firstname_contains]", :size => "30", :type => "text", :value => @filters.user_firstname_contains, :placeholder=>"enter author", :id=>"search_user_firstname"}
+
+            #my_favorite
+              =check_box_tag 'search[favorites_is_active_is_true]', '1', @filters.favorites_is_active_is_true=="1"
+              Show My Favs Only
+            %br
+            = f.text_field :title_contains, :value=>@filters.title_contains, :placeholder=>"search cases", :id=>"searchinput"
+            = f.submit "Search" ,:class=>"btn btn-primary"
+
+        .offset1.span8
+          .pull-right
+            %a(href="#" id="mcase" class="btn btn-primary") Make
+
+
+          %table.table.table-striped
+            %thead
+              %tr
+                %th{:width=>"100px"}
+                %th.span8 Case
+                %th Status
+            %tbody#medical_cases
+              = render "user_cases"
+            .none= paginate @medical_cases#, :theme=>"cases"
+
+
+// New Case form
+.case-form.none
+  #make-case.modal.fade.container{:style => "display: none;", :tabindex => "-1"}
+
+
+//place holder scripts
+/[if IE]
+  :javascript
+    add_placeholder('searchinput', 'search cases');
+    add_placeholder('search_user_firstname', 'enter author');

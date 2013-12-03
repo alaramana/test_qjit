@@ -1,0 +1,12 @@
+.loginform.reset-email
+  = form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }, :validate =>true) do |f|
+    %img(src="/assets/qjitsu_logo_large.png")
+    = f.email_field :email,:maxlength => 150, :label=>false, :validate => { :uniqueness => false },  :placeholder=> 'email', :style=>"width: 84%;"
+    .buttontray
+      = f.submit "Reset password", :class =>"btn btn-primary pull-left"
+      = link_to 'Log In', user_session_path,:class =>"pull-right"
+    .clearfix
+
+/[if IE]
+  :javascript
+    add_placeholder('user_email', 'email');

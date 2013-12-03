@@ -1,0 +1,22 @@
+- unless @invitations.empty?
+  - @invitations.each do |invite|
+    %tr
+      - unless invite.role_id ==1
+        %td{:title => invite.email}= truncate(invite.email, :length => 30, :omission => "...")
+        %td.c-text= display_time(invite.updated_at)
+        %td.c-text
+          = (invite.status)? "Joined": "Pending"
+          - if invite.status == false and (current_user == invite.user or current_user.role_id!=3)
+            = link_to "Resend invitation", {:controller =>"/admin/users", :action=>"resend_invite", :invite =>{:id => invite.id}},:class=>"btn btn-small"
+            = link_to content_tag(:i,"", class: 'icon-trash icon-white'), remove_pending_invitaion_admin_users_path(:invite_id=>invite), :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')), :class => 'btn btn-mini btn-danger', :title=>"remove invitation"
+
+      - if current_user.role_id ==1 && invite.user.present?
+        %td.wrap= invite.user.full_name
+
+      %td.c-text.wrap= invite.medical_organization.name if invite.medical_organization.present?
+      %td.c-text= invite.role.name
+- else
+  %tr
+    %td{:colspan=>6}
+      .alert.alert-info
+        No records found

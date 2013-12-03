@@ -1,0 +1,7 @@
+<h1 id='forums_title'><%= t('.title') %></h1>
+<div class="pull-right">
+  <% if forem_admin? %>
+    <%= link_to t("area", :scope => "forem.admin"), forem.admin_root_path, :class=>"btn btn-primary" %>
+  <% end %>
+</div>
+<%= render @categories %>

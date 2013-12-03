@@ -1,0 +1,52 @@
+.row.well
+  .page-header
+    %h4 Over View
+    .pull-right=link_to "Return to Q list", exam_questions_path(:params=>params), :class=>"btn btn-primary"
+  %table.table
+    %caption
+      %h5.pull-left
+        %i
+          -if params[:exam]=="exam_mode"
+            Exam No : #{@exam_mode[0]}
+          -elsif params[:exam]=="sparring_mode"
+            Exam No : #{@sparring_mode[0]}
+    %thead
+      %tr
+        %th.span4 Questions
+        %th.c-text Time Taken (sec)
+        %th.c-text Answer
+        %th Status
+        -if params[:exam]!="exam_mode"
+          %th.c-text Number of Attempts
+        %th Date
+    %tbody
+      -if params[:exam]=="exam_mode"
+        - @exam_mode[1].each do |x|
+          %tr
+            %td
+              %span{:title=>"#{x.exam_question.question_prompt}"}= truncate(x.exam_question.question_prompt, :length=>70)
+            %td.c-text= x.time_taken
+            %td.c-text
+              %i{:class=>"#{ x.correct==true ? "icon-ok" : "icon-remove" }"}
+            %td= x.status
+            %td= display_time(x.created_at)
+
+      -elsif params[:exam]=="sparring_mode"
+        - @sparring_mode[1].each do |x|
+
+          %tr
+            %td
+              %span{:title=>"#{x.exam_question.question_prompt}"}= truncate(x.exam_question.question_prompt, :length=>70)
+            %td.c-text= x.time_taken
+            %td.c-text
+              %i{:class=>"#{ x.correct==true ? "icon-ok" : "icon-remove" }"}
+            %td= x.status
+            %td.c-text= x.attempt
+            %td= display_time(x.created_at)
+  %hr
+  .offset1.span4
+    %h5.pull-left Total Correct Answer: #{@total_corrects}
+  .offset1.span4
+    %h5.pull-left Total Time Taken: #{@total_time} seconds
+  .offset1.span4
+    %h5.pull-left Level: #{level(@total_corrects)}

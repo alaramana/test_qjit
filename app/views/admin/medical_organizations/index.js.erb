@@ -1,0 +1,6 @@
+$("#medical_organizations").append("<%= j render('medical_organizations')%>");
+<% unless @medical_organizations.last_page? %>
+  $(".pagination").replaceWith("<%= j paginate @medical_organizations %>");
+<% else %>
+  $('.pagination').remove();
+<% end %>

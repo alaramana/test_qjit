@@ -1,0 +1,13 @@
+<table id='forums' class='forums table table-striped' cellspacing='0'>
+  <thead>
+  <tr>
+    <th class="span10 desc-and-last-post"><%= t('forum', :scope => 'forem.general') %></th>
+    <th class="c-text  topics-count"><%= t('topics', :scope => 'forem.general') %></th>
+    <th class="c-text posts-count"><%= t('posts', :scope => 'forem.general') %></th>
+    <th class="c-text views-count"><%= t('forem.forums.index.views') %></th>
+  </tr>
+  </thead>
+  <tbody>
+    <%= render category.forums %>
+  </tbody>
+</table>

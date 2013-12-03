@@ -1,0 +1,30 @@
+#footer
+  .copy.pull-left 
+    &copy; 2013, Qjitsu, Inc. All Rights Reserved
+    %span= Rails.application.config.app_version
+  .links.pull-right
+    %a{"data-toggle" => "modal", :href => "#terms"}  terms      
+    #terms.modal.hide.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+        %h4#myModalLabel Terms &amp; Conditions 
+      .modal-body
+        .terms
+          = render "shared/terms"
+      .modal-footer
+        %button.btn.btn-danger{"aria-hidden" => "true", "data-dismiss" => "modal"} Close
+    |
+    %a{"data-toggle" => "modal", :href => "#privacy"}  privacy      
+    #privacy.modal.hide.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+        %h4#myModalLabel Privacy Rights
+      .modal-body
+        .privacy
+          = render "shared/privacy"
+      .modal-footer
+        %button.btn.btn-danger{"aria-hidden" => "true", "data-dismiss" => "modal"} Close
+    |
+    %a(href="mailto:support@qjitsu.com") contact
+  .clear
+= javascript_include_tag "application", "rails.validations"

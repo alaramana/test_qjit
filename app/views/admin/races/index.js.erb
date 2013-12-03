@@ -1,0 +1,6 @@
+$("#races").append("<%= j render('races')%>");
+<% unless @races.last_page? %>
+  $(".pagination").replaceWith("<%= j paginate @races %>");
+<% else %>
+  $('.pagination').remove();
+<% end %>

@@ -1,0 +1,8 @@
+"Last Name","First Name","Email","Total Questions","Total Comments","Total Ratings"
+<% if !@users.empty?%>
+<% if !@filters.hide_users.present? %>
+<% @users.each do |user| %>
+<%=user.lastname%>,<%=user.firstname%>,<%=user.email%>,<%=user.questions_count%>,<%=user.comments_count%>,<%=user.ratings_count%>
+<%end%>
+<%end%>
+<%end%>

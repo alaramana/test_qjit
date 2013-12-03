@@ -1,0 +1,10 @@
+.details
+  .field.span12
+    %a.value= link_to @comment.user, "#"
+    %span.belt{:class=>"#{user_belt(@comment.user.belt)}"}    
+    .value.fist.gray
+    - if object      
+      %div{:class=>"#{fist_rating(object.ratings.rating_for_user(current_user.id).rate) if object.ratings.present?}"} 
+    .pull-right= display_time(@comment.created_at,:B_e_Y)
+    .message
+      = @comment.comment

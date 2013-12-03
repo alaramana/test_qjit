@@ -1,0 +1,24 @@
+- unless @objectives.empty?
+  - @objectives.each do |objective|
+    %tr
+      %td
+        .dropdown
+          %a.btn.dropdown-toggle(data-toggle="dropdown" href="#")
+            Action
+            %span.caret
+          %ul.dropdown-menu
+            %li
+              = link_to "Edit", edit_admin_objective_path(objective),   :title => "edit" if objective.situation != "Suspended"
+            %li.divider
+            %li{:title=>(objective.suspended? ? "Activate" : "Deactivate")}
+              = link_to content_tag(:i, '', :class=>(objective.suspended? ? "icon-ok" : "icon-remove-sign"))+"#{objective.suspended? ? "Activate" : "Suspend" }", "#", :name =>"#{objective.name}", :title => "#{objective.suspended? ? "Activate" : "Suspend" }", :class=>"status", :id => "#{objective.id}"
+      %td.wrap= objective.name
+      %td.wrap= objective.medical_organization.name
+      %td.wrap= display_time(objective.start_date)  if objective.start_date.present?
+      %td.wrap= display_time(objective.end_date)  if objective.end_date.present?
+      %td= objective.situation
+- else
+  %tr
+    %td{:colspan=>5}
+      .alert.alert-info{:style=>"text-align: center;"}
+        No records found

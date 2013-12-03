@@ -1,0 +1,11 @@
+- @users.each do |user|
+  %tr
+    %td.wrap= user.full_name
+    %td.c-text= number_of_exam(user, 'sparring_mode')
+    %td.c-text= total_questions(user, 'sparring_mode')
+    %td.c-text= user_report_high_score(user, 'sparring_mode')
+    %td.c-text= total_time_taken_report(user, 'sparring_mode')
+    %td.c-text= number_of_exam(user, 'exam_mode')
+    %td.c-text= total_questions(user, 'exam_mode')
+    %td.c-text= user_report_high_score(user, 'exam_mode')
+    %td.c-text= total_time_taken_report(user, 'exam_mode')

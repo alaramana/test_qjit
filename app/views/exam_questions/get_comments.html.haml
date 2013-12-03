@@ -1,0 +1,22 @@
+.modal-header
+  %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+  %h3#myModalLabel Community Comments
+.modal-body
+  - if @question.comments.empty?
+    %h5.c-text
+      %i No comments
+  - elsif question_feedback(@question) == "Hidden"
+    %h5.c-text
+      %i Comments Hidden
+  - else
+    .community-case-comments
+      - @question.comments.each do |cmt|
+        .field.span6
+          %a.value= link_to cmt.user, "#"
+          %span.belt{:class=>"#{user_belt(cmt.user.belt)}"}
+          .pull-right= cmt.created_at.strftime('%B %e, %Y ')
+          %p
+            = cmt.comment
+          %hr
+.modal-footer
+  %button.pull-center.btn.btn-danger.secondary.confirm{"aria-hidden" => "true", "data-dismiss" => "modal"} Close

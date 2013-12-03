@@ -1,0 +1,9 @@
+if ($('.modal-backdrop.fade.in').length==0){
+	$("#exam_questions").append("<%= j render('exam_questions')%>");
+	<% unless @exam_questions.last_page? %>
+		$(".pagination").replaceWith("<%= j paginate @exam_questions %>");
+	<% else %>
+		$('.pagination').remove();
+	<% end %>
+	$('.rateit5').rateit();
+}

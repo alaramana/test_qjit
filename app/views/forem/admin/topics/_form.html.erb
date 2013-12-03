@@ -1,0 +1,15 @@
+<%= simple_form_for [forem, :admin, @topic] do |f| %>
+  <%= f.input :subject %>
+  <%= f.association :forum , :label => "Forum" %>
+
+  <%= f.input :locked , as: :boolean, :label=>"Locked" %>
+
+  <%= f.input :pinned , as: :boolean, :label=>"Pinned" %>
+
+  <%= f.input :hidden , as: :boolean, :label=>"Hidden" %>
+
+  <br />
+  <%= f.submit :class => "btn btn-primary" %>
+  <%= link_to "Cancel", forem.root_path,  :class => "btn" %>
+
+<% end %>

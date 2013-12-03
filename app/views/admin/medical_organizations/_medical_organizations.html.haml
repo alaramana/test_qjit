@@ -1,0 +1,29 @@
+- unless @medical_organizations.empty?
+  - @medical_organizations.each_with_index do |medical_organization, index|
+    %tr
+      %td
+        .dropdown
+          %a.btn.dropdown-toggle(data-toggle="dropdown" href="#")
+            Action
+            %span.caret
+          %ul.dropdown-menu
+            %li
+              = link_to "Edit", edit_admin_medical_organization_path(medical_organization),   :title => "edit"
+            %li.divider
+            - if medical_organization.status==true
+              %li{:title => set_title_to_active(medical_organization.status)}
+                = link_to content_tag(:i, '',  :class => "icon-remove-sign")+"#{medical_organization.status == true ? "Suspend" : "Activate"  }", "#",:name => "#{medical_organization.name}",  :title => "#{set_title_to_active(medical_organization.status) }", :class => "status", :id => "#{medical_organization.id}"
+            - else
+              %li{:title => set_title_to_active(medical_organization.status)}
+                = link_to content_tag(:i, '',  :class => "icon-ok")+"#{medical_organization.status == true ? "Suspend" : "Activate"  }", "#",:name => "#{medical_organization.name}",  :title => "#{set_title_to_active(medical_organization.status) }", :class => "status", :id => "#{medical_organization.id}"
+
+      %td.wrap= medical_organization.name
+      %td= medical_organization.creation_date
+      %td#members.c-text= medical_organization.total_members
+      %td= medical_organization.active_status
+
+- else
+  %tr
+    %td{:colspan=>4}
+      .alert.alert-info{:style=>"text-align: center;"}
+        No records found

@@ -1,0 +1,24 @@
+.clearfix{*zoom:1;}.clearfix:before,.clearfix:after{display:table;content:"";line-height:0;}
+.clearfix:after{clear:both;}
+.hide-text{font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0;}
+.input-block-level{display:block;width:100%;min-height:30px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+html.lt-ie9 #main-content .prospects-list .prospect button.close{padding-bottom:0;opacity:0;filter:alpha(opacity=0);visibility:visible;}
+html.lt-ie9 #main-content .prospects-list .prospect:hover button.close{opacity:1;filter:alpha(opacity=100);}
+html.lt-ie8  img.bannerlogo{ z-index: 100;}
+html.lt-ie9 .new_invite #invite_email{  min-height: 20px;}
+html.lt-ie9 .loginform #new_user input[type="email"], .loginform #new_user input[type="password"]{
+	width: 285px;
+}
+
+html.lt-ie8 .loginform #user_email, html.lte-ie9 .loginform #user_email{
+	width: 285px
+}
+
+html.lt-ie8 [class^="icon-"], [class*=" icon-"]{
+	background-image: url(/assets/twitter/bootstrap/glyphicons-halflings.png);
+}
+
+html.lt-ie8 .alert{
+	padding-bottom: 0;
+}
+

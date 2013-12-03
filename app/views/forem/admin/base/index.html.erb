@@ -1,0 +1,15 @@
+
+<h1 id='forums_title'><%= t('forem.admin.area') %></h1>
+<hr />
+
+
+<ul>
+  <li><%= link_to "Manage Categories", forem.admin_categories_path %></li>
+  <li><%= link_to t('forem.admin.group.index'), forem.admin_groups_path %></li>
+  <li><%= link_to t('forem.admin.forum.index'), forem.admin_forums_path %> </li>
+</ul>
+
+<br>
+<footer id='admin_link'>
+  <%= link_to t(:back_to_forums, :scope => 'forem.admin'), forem.root_path %>
+</footer>

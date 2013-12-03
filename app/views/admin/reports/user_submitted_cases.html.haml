@@ -1,0 +1,69 @@
+.sectionpad
+  .tabbable
+    %ul.nav.nav-tabs
+      %li
+        =link_to "Users" , admin_users_path
+      %li
+        =link_to "Orgs" , admin_medical_organizations_path
+      %li
+        =link_to "Cases", user_cases_admin_users_path
+      %li
+        =link_to "Invitations", invitations_admin_users_path
+      %li.active
+        = link_to "Reports",admin_reports_path
+      %li
+        = link_to "Races",admin_races_path
+      %li
+        = link_to "Assignments",admin_objectives_path
+    .tab-content
+      #reports(class="tab-pane active")
+        .tabbable
+          %ul.nav.nav-tabs
+            %li
+              =link_to "Activity" , admin_reports_path
+            %li.active
+              =link_to "Contributions", user_submitted_cases_admin_reports_path
+            %li
+              =link_to "Exam Scores", user_test_admin_reports_path
+            %li
+              =link_to "Belt Levels", user_aggregate_admin_reports_path
+          .tab-content
+            #Invite(class="tab-pane active")
+              .buttontray
+                = form_for "search_filter", :action=>"admin/reports/user_submitted_cases", :method=>"get", :html=>{:class=>"qsearchable"} do |f|
+                  .well
+                    %table.report-filter
+                      %tbody
+                        %tr
+                          %th Name / Email
+                          %th Organization
+                          %th Assignment
+                          %th Date Range
+                        %tr
+                          %td= f.text_field :name, :value=>"#{@filters.name unless @filters.name.nil?}"
+                          %td= f.select(:org_id, MedicalOrganization.where(:status=>true).map{|x|[x.name, x.id]}, :include_blank=>true, :selected=>@filters.org_id )
+                          %td= f.select(:exam_questions_objective_id_in, Objective.where_status_is_open_or_closed().collect {|p| [ p.name, p.id ] }, :include_blank=>true, :selected=>@filters.exam_questions_objective_id_in)
+                          %td
+                            - dateFormat = "MM/dd/yyyy HH:mm PP #{Time.now.in_time_zone.strftime("%Z")}"
+                            .input-append.datetimepicker{"data-end-date"=>display_time(Time.now), :class=>"date"}
+                              = f.text_field :created_at_gte, :'data-format'=>dateFormat, :value=>"#{display_time(@filters.created_at_gte,:datetime_picker)}", :placeholder=>'From'
+                              %span.add-on
+                                %i.icon-calendar
+                          %td
+                            .input-append.datetimepicker{"data-end-date"=>display_time(Time.now), :class=>"date"}
+                              = f.text_field :created_at_lte, :'data-format'=>dateFormat, :value=>"#{display_time(@filters.created_at_lte,:datetime_picker)}", :placeholder=>'To'
+                              %span.add-on
+                                %i.icon-calendar
+                        %tr
+                          %td
+                          %td
+                          %td
+                            %label.checkbox
+                              =check_box_tag 'search_filter[hide_users]', 'yes', @filters.hide_users=="yes"
+                              Hide users with no contributions
+                        %tr
+                          %td
+                            = f.submit "Search", :class => 'btn btn-primary'
+                            = link_to "Clear",user_submitted_cases_admin_reports_path,  :class => 'btn'
+                  #qpaginated
+                    = render "user_submitted_cases"

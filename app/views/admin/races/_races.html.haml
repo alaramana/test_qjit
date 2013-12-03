@@ -1,0 +1,26 @@
+- unless @races.empty?
+  - @races.each do |race|
+    %tr
+      %td
+        .dropdown
+          %a.btn.dropdown-toggle(data-toggle="dropdown" href="#")
+            Action
+            %span.caret
+          %ul.dropdown-menu
+            %li
+              = link_to "Edit", edit_admin_race_path(race),   :title => "edit"
+            %li.divider
+            - if race.status==true
+              %li{:title => set_title_to_active(race.status)}
+                = link_to content_tag(:i, '',  :class => "icon-remove-sign")+"#{race.status == true ? "Suspend" : "Activate"  }", "#",:name => "#{race.name}",  :title => "#{set_title_to_active(race.status) }", :class => "status", :id => "#{race.id}"
+            - else
+              %li{:title => set_title_to_active(race.status)}
+                = link_to content_tag(:i, '',  :class => "icon-ok")+"#{race.status == true ? "Suspend" : "Activate"  }", "#",:name => "#{race.name}",  :title => "#{set_title_to_active(race.status) }", :class => "status", :id => "#{race.id}"
+      %td.wrap= race.name
+      %td= display_time(race.created_at)
+      %td= race.status? ? "Active" : "Inactive"
+- else
+  %tr
+    %td{:colspan=>4}
+      .alert.alert-info{:style=>"text-align: center;"}
+        No records found

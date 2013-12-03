@@ -1,0 +1,113 @@
+.page-header-title
+  = @medical_case.title
+  .pull-right  Case #: #{@medical_case.id}
+%hr
+#accordion2.accordion
+  .accordion-group
+    .accordion-heading
+      %a.accordion-toggle.tags-list.tags-list-names{"data-parent" => "#accordion2", "data-toggle" => "collapse", :href => "#collapseTwo"}
+        %span.toggle [+]
+        Case Details
+    #collapseTwo.accordion-body.collapse
+      .accordion-inner
+        %table.table
+          %caption
+            %h5 Patients Overviews:
+          %thead
+            %th Age
+            %th Gender
+            %th Race
+            %th Chief Complaint
+          %tbody
+            %td= @medical_case.age
+            %td= @medical_case.gender
+            %td= @medical_case.race
+            %td= @medical_case.chief_complaint
+        %hr
+        %h5 HPI
+        %p
+          = @medical_case.history_of_present_illness
+        %hr
+
+        %table.table
+          %tbody
+            %tr
+              %th Medication
+              %th Past Medical history
+            %tr
+              %td= @medical_case.medical_history.medication unless @medical_case.medical_history.nil?
+              %td= @medical_case.medical_history.past_medical_history
+            %tr
+              %th Allergies
+              %th Family history
+            %tr
+              %td= @medical_case.medical_history.allergies
+              %td= @medical_case.medical_history.family_history
+        %hr
+
+        %h5 ROS
+        %p
+          some paragraps
+        %hr
+
+        %table.table
+          %caption
+            %h5 Vitals
+          %thead
+            %th Temperature
+            %th Hear Rate
+            %th Blood Pressure
+            %th Respiratory Rate
+            %th Sp02
+          %tbody
+            %td= @medical_case.review.temperature
+            %td= @medical_case.review.heart_rate
+            %td= @medical_case.review.blood_pressure
+            %td= @medical_case.review.respiratory_rate
+            %td= @medical_case.review.spo2
+
+        %h5 Physical Exam Description
+        %p=@medical_case.review.physical_exam_description
+
+        %h5 Abdominal Exam
+        - @medical_case.review.specific_exam_details.each do |pexam|
+          %p= pexam.exam
+
+        %hr
+
+        %table.table
+          %caption
+            %h5 Labs
+          %tbody
+            %tr
+              - @medical_case.labs.each_with_index do |x, i|
+                %th= x.name
+            %tr
+              - @medical_case.labs.each_with_index do |x, i|
+                %td= x.result
+
+        %hr
+
+        %table.table
+          %caption
+            %h5 Imagings
+          %tbody
+            %tr
+              - @medical_case.imagings.each_with_index do |x, i|
+                %th= x.name
+            %tr
+              - @medical_case.imagings.each_with_index do |x, i|
+                %td= x.result
+
+        %hr
+
+        %table.table
+          %caption
+            %h5 Other Studies
+          %tbody
+            %tr
+              - @medical_case.other_studies.each_with_index do |x, i|
+                %th= x.name
+            %tr
+              - @medical_case.other_studies.each_with_index do |x, i|
+                %td= x.result

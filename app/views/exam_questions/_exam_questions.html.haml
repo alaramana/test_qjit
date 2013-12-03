@@ -1,0 +1,45 @@
+- if @exam_questions.present?
+  - @exam_questions.each do  |question|
+    %li.box
+      .heading
+        %h4
+          %span Q:
+          = link_to truncate(question.question_prompt,:length => 70), sparring_mode_exam_questions_path(:question=>question.id, :search=>params[:search], :tag_name=>params[:tag_name], :not_answer => params[:not_answer], :order=>params[:order], :page=>1)        
+        = link_to content_tag(:i, '',  :class => "#{is_question_favorite(current_user, question.id)}"), "#",:name => "#{question.question_prompt}",  :title => "#{is_question_favorite(current_user, question.id)  == "cstar" ? :"Remove favorite" : "Add favorite" }", :class => "status", :id => "#{question.id}"
+        .actions
+          /--------- Edit Question-----------/
+          - if question.creator_id == current_user.id
+            %i.icon-pencil.edit_question{:id=>question.id, :title=>"Edit question"}
+            
+          /--------- Model Comments-----------/
+          %a.icon-comment{:id=>question.id, :class=>"#{"www" if question.comments.present?}", :name=>"question", :title =>"Comments"}
+
+          /--------- Model Tags-----------/
+          %a.icon-tag{:id=>question.id , :class=>"#{"www" if question.tags.present?}", :name=>"question", :title =>"Tags"}
+         
+      .details
+        .field.span5
+          %label Author:
+          %a.value
+          - if question_author(question) =="Hidden"
+            %i Hidden
+          -else
+            = link_to question.user.full_name, "#" unless question.user.nil?
+            %span.belt{:class=>"#{user_belt(question.user.belt)}"}
+        .field.span3
+          %label Average Rating:
+          - if question_feedback(question) =="Hidden"
+            %i Hidden
+          -else
+            .value.fist.gray            
+            %div{:class=>"#{fist_rating(question.average_rating)}"}
+        .field.span2
+          %label Your Rating:
+          .value.fist.gray
+          - if question.ratings.rated_by?(current_user.id)
+            %div{:class=>"#{fist_rating(question.ratings.rating_for_user(current_user.id).rate)}"}         
+
+- else
+  .span12
+    .alert.alert-info.exam-alert
+      No records found

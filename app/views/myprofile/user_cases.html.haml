@@ -1,0 +1,34 @@
+.sectionpad
+  .tabbable
+    %ul.nav.nav-tabs
+      %li
+        %a(href="/myprofile/")Account
+      %li.active
+        %a(href="/myprofile/user_cases" )Cases
+      %li
+        %a(href="/myprofile/user_history")History
+    .tab-content
+      #users_status(class="tab-pane active")
+        .buttontray
+          %span.pull-left View:
+          .span3
+            = form_for "search", :action=>"/myprofile/user_cases", :method=>"get" do |f|
+              = f.select("status_contains", [["All", ""],["Submitted", "approved"], ["Draft", "draft"]], :selected =>  @filters.status_contains )
+          .pull-right
+            %a(href="#" id="mcase" class="btn btn-primary") Make +
+
+        %table.table.table-striped.span11
+          %thead
+            %tr
+              / %th.span1
+              %th.span9 Medical Case
+              %th.span3 Created Date
+              %th.span1 Action
+          %tbody#medical_cases
+            = render "user_cases"
+          .none= paginate @medical_cases
+
+//Edit Case form
+.case-form.none
+  #make-case.modal.fade.container{:style => "display: none;", :tabindex => "-1"}
+

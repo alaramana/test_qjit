@@ -1,0 +1,7 @@
+%tr.fields
+  %td{:style=>"width: 30%;"}
+    = f.input :name, :label=>false, :placeholder=> "other study name"
+  %td{:style=>"width: 30%;"}
+    = f.input :result, :label=>false, :placeholder=> "other study result"
+  %td.pull-right
+    = link_to_remove_fields "Delete", f

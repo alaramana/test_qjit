@@ -1,0 +1,38 @@
+.container-fluid
+  .row-fluid
+
+    // Sidebar Content
+    .span2
+      = render "sidebar"
+
+    // Header Content
+    .span10
+      .headcontainer
+        .span3
+          - if score_board_incomplete
+            =link_to "QUIT EXAM", overview_exam_questions_path(:exam=>"exam_mode", :params=>@filters), :class=>"btn btn-primary"
+          - else
+            =link_to "QUIT EXAM", exam_questions_path(:params=>@filters ), :class=>"btn btn-primary"
+        .span2
+          .label.label-success EXAM MODE
+        .span2
+          Correct: #{@taken_score} of #{@qcount}
+        .span2
+          Time Taken:
+          = total_time_taken
+        .span3.pull-right
+          .exam_mode
+            - if @score.nil? or  (!@score.nil? && @score.correct == true)
+              = paginate @nexts, :params=>{:id=>nil, :question=>nil} if @taken_score !=46
+
+    // Center Content
+    .span10.well
+      - unless @medical_case.nil?
+        = render "details"
+      - if !@score.nil?
+        .header-image
+          = image_tag(@score.correct? ? 'nailed.png' : 'missed.png')
+        = render "results"
+      -else
+        - @score = ScoreBoard.new
+        = render "question"

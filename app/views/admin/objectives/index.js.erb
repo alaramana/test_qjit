@@ -1,0 +1,6 @@
+$("#objectives").append("<%= j render('objectives')%>");
+<% unless @objectives.last_page? %>
+  $(".pagination").replaceWith("<%= j paginate @objectives %>");
+<% else %>
+  $('.pagination').remove();
+<% end %>

@@ -1,0 +1,6 @@
+<%= simple_form_for([forem, :admin, @group]) do |f| %>
+  <%= f.input :name %>
+  <%= f.submit :class => "btn btn-primary" %>
+  <%= link_to "Cancel", forem.admin_groups_path, :class => "btn " %>
+
+<% end %>

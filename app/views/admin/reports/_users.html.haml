@@ -1,0 +1,8 @@
+- @users.each do |user|  
+  %tr
+    %td.wrap= user.full_name
+    %td= user.email
+    %td.c-text= user.sign_in_count
+    %td.c-text
+      - unless user.average_session_time.nil?
+        =distance_of_time_in_words(user.average_session_time).capitalize

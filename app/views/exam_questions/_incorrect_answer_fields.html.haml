@@ -1,0 +1,8 @@
+%tr.fields.numbers
+  / %td{:style=>" float: left; width: 98%;"}
+  %td{:id=>"row#{i}", :class=>"row#{i}"}
+    = f.input :answer, :label=>"Incorrect Answer #{i}# *", :input_html=>{:class=>"validate required"}
+    = f.input :explanation, :label=>"Incorrect Answer #{i}# Explanation ", :input_html=>{:rows=>"2", :class=>" span12"}
+  / %td{:style=>"width: 13%;background:none"}
+  / = link_to_remove_fields  "Delete" ,f
+%br

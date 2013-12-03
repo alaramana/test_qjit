@@ -1,0 +1,27 @@
+:css
+  .alert{
+  width: 74%;
+  font-size: .8em;
+  }
+
+.loginform
+  = form_for(resource, :as => resource_name, :url => session_path(resource_name), :validate =>true) do |f|
+    %img(src="/assets/qjitsu_logo_large.png")
+    .flash-error#cookie-message
+      .alert.fade.in.alert-error
+        %button.close{"data-dismiss" => "alert"}> ×
+        Cookies are disabled. Please enable it.
+    .flash-error
+      = bootstrap_flash
+    #email
+      = f.email_field :email, :maxlength => 150, :validate => { :uniqueness => false },  :placeholder=> 'email' ,:style=>"width: 84%;"
+    = f.password_field :password, :maxlength => 50, :validate => { :confirmation => false, :length=>false },  :placeholder => 'password'  ,:style=>"width: 84%;", :onkeypress=>"return $('button.close').click();"
+    .buttontray
+      = f.submit "Log In", :class =>"btn btn-primary pull-left "
+      = link_to 'forgot password?', "/users/password/new",:class =>"pull-right"
+    .clearfix
+
+/[if IE]
+  :javascript
+    add_placeholder('user_password', 'password');
+    add_placeholder('user_email', 'email');

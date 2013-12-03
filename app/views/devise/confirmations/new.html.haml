@@ -1,0 +1,15 @@
+.loginform.reset-email
+  = form_for(resource, :as => resource_name, :url => confirmation_path(resource_name), :html => { :method => :post }) do |f|
+    %img(src="/assets/qjitsu_logo_large.png")
+    .flash-error 
+      .alert.fade.in.alert-error     
+        = resource.errors.full_messages.first
+    = f.email_field :email,:maxlength => 150, :label=>false, :validate => { :uniqueness => false },  :placeholder=> 'email', :style=>"width: 84%;"
+    .buttontray
+      = f.submit "Resend confirmation", :class =>"btn btn-primary pull-left"
+      = link_to 'Log In', user_session_path,:class =>"pull-right"
+    .clearfix
+
+/[if IE]
+  :javascript
+    add_placeholder('user_email', 'email');

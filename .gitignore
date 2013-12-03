@@ -1,0 +1,5 @@
+.rvmrc.sample
+README.rdoc
+README.txt
+/log
+/config/database.yml

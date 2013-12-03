@@ -1,0 +1,31 @@
+.container-fluid
+  .row-fluid
+
+    // Sidebar Content
+    .span2
+      = render "sidebar"
+    // Header Content
+
+    .span10
+      .headcontainer
+        .span3
+          = link_to " Return To Q Lists", exam_questions_path(@filters), :class=>"btn btn-primary"
+        .span2
+          .label.label-warning SPARRING MODE
+        .span3.pull-right
+          .exam_mode
+            = paginate @nexts, :params=>{:question=>nil}
+
+    //Center Content
+    .span10.well
+      - unless @medical_case.nil?
+        = render "details"
+      - if !@score.nil?
+        .header-image
+          = image_tag(@score.correct? ? 'nailed.png' : 'failed.png')
+        = render :partial=>"results" if @score.correct
+        = render :partial=> "question", :locals=>{:score=>@score} if !@score.correct
+      -else
+        - @score = ScoreBoard.new
+        = render :partial=> "question", :locals=>{:score=>@score}
+

@@ -1,0 +1,16 @@
+-unless @medical_cases.empty?
+  - @medical_cases.each do |mcase|
+    %tr
+      / %td
+      %td
+        =truncate(mcase.title,:length => 120)
+      %td
+        = display_time(mcase.created_at)
+      %td
+        - if mcase.status != "approved"
+          %a{:class=>"edit_wizard btn", :id=>mcase.id } Edit
+- else
+  %tr
+    %td{:colspan=>3}
+      .alert.alert-info
+        No records found

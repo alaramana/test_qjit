@@ -1,0 +1,11 @@
+%p#notice= notice
+%p
+  %b Name:
+  = @objective.name
+%p
+  %b Status:
+  = @objective.status
+
+= link_to 'Edit', edit_objective_path(@objective)
+\|
+= link_to 'Back', objectives_path

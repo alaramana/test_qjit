@@ -1,0 +1,22 @@
+!!!html
+/[if lt IE 7] <html lang="en" class="no-js lt-ie9 lt-ie8 lt-ie7">
+/[if IE 7] <html lang="en" class="no-js lt-ie9 lt-ie8">
+/[if IE 8] <html lang="en" class="no-js lt-ie9">
+/[if IE] <html lang="en" class="no-js lte-ie9">
+<!--[if gt IE 8]><!-->
+%html(lang="en" class="no-js")
+  <!--<![endif]-->
+
+  = render :partial=>"layouts/head"
+
+  %body
+    = render :partial=>"layouts/header", :locals=>{:exam_questions_path=>main_app.exam_questions_path, :medical_cases_path=>main_app.medical_cases_path, :about_path=>main_app.about_path, :admin_users_path=>main_app.admin_users_path, :destroy_user_session_path=>main_app.destroy_user_session_path,:dashboard_index_path=>main_app.dashboard_index_path}
+    #wrap
+      #main-content
+        .pagecontainer
+          .row-fluid
+            = bootstrap_flash
+          .forums_container
+            = yield
+
+    = render :partial=>"layouts/footer"

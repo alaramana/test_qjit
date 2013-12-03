@@ -1,0 +1,6 @@
+$("#users").append("<%= j render('users')%>");
+<% unless @users.last_page? %>
+  $(".pagination").replaceWith("<%= j paginate @users %>");
+<% else %>
+  $('.pagination').remove();
+<% end %>

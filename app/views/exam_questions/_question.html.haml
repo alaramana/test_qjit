@@ -1,0 +1,51 @@
+%h4
+  Question:
+  - if @exam_question.creator_id == current_user.id
+    .edit-btn.pull-right
+      %a.btn.edit_question{:id=>@exam_question.id, :title=>"Edit question"}
+        Edit
+
+= form_for [@exam_question, @score] do |form|
+  = form.hidden_field :time_taken
+  = form.hidden_field :exam_mode, :value=>params[:action]
+  = form.hidden_field :medical_case_id, :value=>"#{@medical_case.id unless @medical_case.nil?}"
+  %input{:type=>"hidden", :name=>"page", :value=>"#{params[:page]}"}
+  %input{:type=>"hidden", :name=>"search", :value=>"#{params}"}
+  .form_row
+    %p= @exam_question.question_prompt
+    .span12
+      - @exam_question.position.each do |x|
+        - unless @no_of_choice[x].nil?
+          %label.radio
+            = form.radio_button(:answer, @no_of_choice[x])
+            = @no_of_choice[x].humanize
+            %br
+    .image_row
+      .span12
+        -if @exam_question.photo.present?
+          %a.fancybox{:href => "#{@exam_question.photo.url}", :rel => "group", :title=>"#{@exam_question.photo_file_name}"}
+            %img.img-polaroid{:alt => "", :src => "#{@exam_question.photo.url(:small)}"}/
+
+    .offset4.span3
+      = form.submit "Submit Your Answer", :class=>"btn  btn-primary btn-block"
+
+      - if params[:action]=="sparring_mode"
+        = link_to "Skip This Question >>", sparring_mode_exam_questions_path(:page=>params[:page].to_i+1, :params=>@filters), :class=>"btn btn-block" if !@nexts.last_page?
+        = link_to "I'm Done", exam_questions_path(:params=>@filters), :class=>"btn btn-block imdone" if @is_done.empty?
+        = link_to "I'm Done", overview_exam_questions_path(:exam=>"sparring_mode",:params=>@filters), :class=>"btn btn-block imdone" if !@is_done.empty?
+
+      -elsif params[:action]=="exam_mode"
+        = link_to "Skip This Question", exam_mode_exam_questions_path(:page=>params[:page].to_i+1, :params=>@filters), :class=>"btn btn-block" if !@nexts.last_page?
+        = link_to "I'm Done", exam_questions_path(:params=>@filters), :class=>"btn btn-block imdone" if @is_done.empty?
+        = link_to "I'm Done", overview_exam_questions_path(:exam=>"exam_mode",:params=>@filters), :class=>"btn btn-block imdone"if !@is_done.empty?
+
+
+#myModal.modal.hide.fade{"aria-hidden" => "true", "aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-body
+    %h3 Please answer the question.
+  .modal-footer
+    %button.btn.btn-danger{"aria-hidden" => "true", "data-dismiss" => "modal"} Close
+
+//New Case form
+.case-form.none
+  #make-case.modal.fade.container{:style => "display: none;", :tabindex => "-1"}

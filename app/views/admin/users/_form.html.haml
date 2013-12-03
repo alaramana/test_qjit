@@ -1,0 +1,46 @@
+.span7
+  = form_for [:admin, @user],:as  => :user,:validate =>true, :html => { :class => 'form-horizontal' } do |f|
+    .control-group
+      %label.control-label.required First Name:
+      = f.text_field :firstname, :maxlength => 40
+    .control-group
+      %label.control-label.required Last Name:
+      = f.text_field :lastname, :maxlength => 40
+    .control-group
+      %label.control-label.required Username:
+      .controls.readonly.word-wrap= @user.email
+    %br
+    .control-group
+      %label.control-label School:
+      =f.select :medical_organization_id, @acitve_medical_organizations, { :prompt => '--Select--'}
+    %br
+    .control-group
+      %label.control-label Address 1:
+      = f.text_field :address1, :maxlength => 50
+    .control-group
+      %label.control-label Address 2:
+      = f.text_field :address2, :maxlength => 50
+    .control-group
+      %label.control-label City:
+      = f.text_field :city, :maxlength => 50
+    %br
+    .control-group
+      %label.control-label State:
+      =f.select :state_id, @states, { :prompt => '--Select--'}
+    %br
+    .control-group
+      %label.control-label Zip:
+      = f.text_field :zip ,:as => :string, :maxlength => 10
+    .control-group
+      %label.control-label Phone:
+      = f.text_field :phone,:as => :string, :maxlength => 20
+    .control-group
+      %label.control-label.required Email:
+      = f.text_field :email, :maxlength => 150
+    .control-group
+      %label.control-label Change Role:
+      - @roles = @all_roles
+      =f.select :role_id, @roles.compact, :include_blank => false
+    .offset2.buttontray
+      = f.submit "Update", :class => "btn btn-primary"
+      = link_to "Cancel", "/admin/users",  :class =>"btn"

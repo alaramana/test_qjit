@@ -1,0 +1,116 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+en:
+  activerecord:
+    models:
+      user: "Customer"
+    attributes:
+      user:
+        email: "Email address"
+    errors:
+      models:
+        user:
+          attributes:
+            firstname:
+              blank: "Firstname can't be blank"
+              invalid: "Firstname is invalid"
+              too_long: "Firstname is too long(maximum is 40 char's)"
+            lastname:
+              blank: "Lastname can't be blank"
+              invalid: "Lastname is invalid"
+              too_long: "Lastname is too long(maximum is 40 char's)"
+            username:
+              blank: "Username can't be blank"
+              taken: "Username is already taken"
+              too_long: "Username is too long(maximum is 40 char's)"
+              too_short: "Username is too short(minimum is 3 char's)"
+            address1:
+              blank: "Address1 can't be blank"
+              too_long: "Address1 is too long(maximum is 50 char's)"
+            address2:
+              too_long: "Address2 is too long(maximum is 50 char's)"
+            city:
+              blank: "City can't be blank"
+              too_long: "City is too long(maximum is 50 char's)"
+            zip:
+              blank: "Zip can't be blank"
+              invalid: "Zip is invalid"
+              too_long: "Zip is too long (maximum is 10 digits)"
+              too_short: "Zip is too short (minimum is 5 digits)"
+            phone:
+              blank: "Phone can't be blank"
+              invalid: "Phone is invalid"
+              too_short:  "Phone is too short (minimum is 10 digits)"
+              too_long: "Phone is too long (maximum is 20 digits)"
+            email:
+              blank: "Email can't be blank"
+              invalid: "Email is invalid"
+              taken: "Email is already being used."
+              too_long: "Email is too long(maximum is 70 char's)"
+            password:
+              blank: "Password can't be blank"
+              invalid: "Password is invalid"
+              confirmation: "Password does not match your confirmation."
+              too_short: "Password is too short (minimum is 8 char's)"
+              too_long: "Password is too long (maximum is 50 char's)"
+            medical_organization_id:
+              blank: "Select a School"
+            state_id:
+              blank: "Select a State"
+            role_id:
+              blank: "Select a Role"
+
+        medical_organization:
+          attributes:
+            name:
+              blank: "Name can't be blank"
+              taken: "Name is already taken"
+              too_long: "Name is too long (maximum is 50 char's)"
+
+        race:
+          attributes:
+            name:
+              blank: "Name can't be blank"
+              taken: "Name is already taken"
+              too_long: "Name is too long (maximum is 50 char's)"
+              invalid: "Name is invalid"
+        objective:
+          attributes:
+            name:
+              blank: "Name can't be blank"
+              taken: "Name is already taken"
+              too_long: "Name is too long (maximum is 50 char's)"
+              invalid: "Name is invalid"
+            start_date:
+              blank: "Start Date can't be blank"
+              date: "Start Date must be a date format"
+              not_a_date: "Start Date must be a date format"
+              after_or_equal_to: "Start Date must be on or after today"
+            end_date:
+              date: "End Date must be a date format"
+              not_a_date: "Start Date must be a date format"
+              after: "End Date must be after the Start Date"
+            medical_organization_id:
+              blank: "Select a School"
+        invite:
+          attributes:
+            email:
+              blank: "Email can't be blank"
+              invalid: "Email is invalid"
+              taken: "Invitation has already been sent."
+              too_long: "Email is too long (maximum is 150 char's)"
+            role_id:
+              blank: "Select user role"
+              inclusion: "Only Admin and User roles allowed"
+            invitor_id:
+              blank: "Select a User"
+            invitation_token:
+              blank: "Invitation can't be blank"
+            medical_organization_id:
+               blank: "Select a School"
+  views:
+    pagination:
+      first: "&laquo;"
+      last: "&raquo;"
+      previous: "&lsaquo;"
+      next: "&rsaquo;"
+      truncate: ". . ."

@@ -1,0 +1,53 @@
+.sectionpad
+  .tabbable
+    %ul.nav.nav-tabs
+      %li
+        =link_to "Users" , admin_users_path
+      %li
+        =link_to "Orgs" , admin_medical_organizations_path
+      %li
+        =link_to "Cases", user_cases_admin_users_path
+      %li.active
+        =link_to "Invitations", invitations_admin_users_path
+      %li
+        = link_to "Reports",admin_reports_path
+      %li
+        = link_to "Races",admin_races_path
+      %li
+        = link_to "Assignments",admin_objectives_path
+    .tab-content
+      #invite(class="tab-pane active")
+        .buttontray
+          %span.pull-left View:
+          .span3
+            = form_for "search", :action=>"admin/invitations", :method=>"get" do |f|
+              = f.select("status_is_true", [["All", "all"],["Joined", "joined"], ["Pending", "pending"]], :selected => @filters.status_is_true )
+          .pull-right
+            = form_for Invite.new , :validate => true do |f|
+              .span4
+                = f.email_field :email, :placeholder => "email" , :class => ' ', :maxlength => 150
+              .span3
+                = f.select :medical_organization_id, @acitve_medical_organizations, { :prompt => '--Select a School--'}
+              .span2
+                = f.select :role_id, options_for_select([["--Select role--", ""],["User", 3],["Admin", 2]]), :include_blank => false
+              .span.send-button
+                = f.submit "Send An Invite", :class => 'btn btn-primary'
+        %table.table.table-striped
+          %thead
+            %tr
+              %th.span3= sortable_column "Email", :column => "email"
+              %th.c-text.span3= sortable_column "Invited Date", :column => "updated_at"
+              %th.c-text.span3= sortable_column "Status", :column =>"status"
+              - if current_user.role_id == 1
+                %th.span2=sortable_column "Invited By", :column =>"invitor_name"
+              %th.c-text.span2=sortable_column "Org Name",:column =>"medical_organization_name"
+              %th.c-text.span2=sortable_column "User Type",:column =>"role_name"
+          %tbody#invitations
+            = render "invitations"
+          .none= paginate @invitations#, :theme=>"cases"
+
+
+
+/[if IE]
+  :javascript
+    add_placeholder('invite_email', 'email');

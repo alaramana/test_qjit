@@ -1,0 +1,21 @@
+!!!html
+/[if lt IE 7] <html lang="en" class="no-js lt-ie9 lt-ie8 lt-ie7">
+/[if IE 7] <html lang="en" class="no-js lt-ie9 lt-ie8">
+/[if IE 8] <html lang="en" class="no-js lt-ie9">
+/[if IE] <html lang="en" class="no-js lte-ie9">
+<!--[if gt IE 8]><!-->
+%html(lang="en" class="no-js")
+  <!--<![endif]-->
+
+  = render :partial=>"layouts/head"
+
+  %body
+    = render :partial=>"layouts/header"
+    #wrap
+      #main-content
+        .pagecontainer
+          .row-fluid
+            = bootstrap_flash
+          = yield
+
+    = render :partial=>"layouts/footer"

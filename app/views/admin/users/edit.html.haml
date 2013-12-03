@@ -1,0 +1,20 @@
+.sectionpad
+  .tabbable
+    %ul.nav.nav-tabs
+      %li.active
+        %a(href= "/admin/users"  )Users
+      %li
+        %a(href="/admin/medical_organizations" )Orgs
+      %li
+        =link_to "Cases", user_cases_admin_users_path
+      %li
+        =link_to "Invitations", invitations_admin_users_path
+      %li
+        = link_to "Reports",admin_reports_path
+      %li
+        = link_to "Races",admin_races_path
+      %li
+        = link_to "Assignments",admin_objectives_path
+    %h3 Edit #{@user.full_name}
+    %br
+    = render 'form'

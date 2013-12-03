@@ -1,0 +1,19 @@
+<% if @comment.id.present? %>
+	$('#error').html('');
+	$('#error-case').html('');
+	if($('.community-comments').is(':visible')==true){
+		$('.community-comments').prepend("<%= j render(:partial => 'comment', :locals => {:object => @question}) %>");
+	}
+	if($('.community-case-comments').is(':visible')==true){
+		$('.community-case-comments').prepend("<%= j render(:partial => 'comment', :locals => {:object => @medical_case}) %>");
+		
+	}
+	$('textarea').val('');
+<% else %>
+	if($('#error').is(':visible')==true) {
+		$('#error').html('<p class="pull-right error">Please enter question comment</p>');
+	}
+	if($('#error-case').is(':visible')==true){
+	  $('#error-case').html('<p class="pull-right error">Please enter case comment</p>');
+	}
+<% end %>

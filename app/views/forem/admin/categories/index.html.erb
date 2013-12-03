@@ -1,0 +1,32 @@
+<h2><%= t("forem.admin.category.index") %></h2>
+<div class="pull-right">
+  <%= link_to t('forem.admin.forum.index'), forem.admin_forums_path %>
+</div>
+
+
+<%= link_to t('back_to_admin', :scope => "forem.admin"), forem.admin_root_path %><br><br>
+<%= link_to t("forem.admin.category.new_link"), forem.new_admin_category_path, :class => "btn btn-primary" %><br><br>
+
+<table id='forums' class='forums table-striped table' cellspacing='0'>
+  <thead>
+    <tr>
+      <th class="span10"><%= t('category', :scope => 'forem.admin.categories') %></th>
+      <th class="span1"><%= t('edit', :scope => 'forem.admin.categories') %></th>
+      <th class="span1"><%= t('delete', :scope => 'forem.admin.categories') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @category.each do |category| %>
+      <tr class="forum <%= cycle("odd", "even") %>">
+        <td>
+          <%= forem_emojify(category.name) %>
+        </td>
+        <td><%= link_to t('edit', :scope => 'forem.admin.categories'), forem.edit_admin_category_path(category), :class => "btn btn-info" %></td>
+        <td><%= link_to t('delete', :scope => 'forem.admin.categories'), forem.admin_category_path(category), :method => :delete,
+        data: { :confirm => "Are you sure want to delete" }, :class => "btn btn-danger" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+

@@ -1,0 +1,32 @@
+-unless @medical_cases.empty?
+  - @medical_cases.each do |mcase|
+    -unless (mcase.user.role_id == 3 && mcase.status == "draft")  or( mcase.user.id !=current_user.id && mcase.status=="draft")
+      %tr
+        %td
+          .dropdown
+            %a.btn.dropdown-toggle(data-toggle="dropdown" href="#")
+              Action
+              %span.caret
+            %ul.dropdown-menu
+              %li
+                = link_to  "Inactive", inactive_medical_case_path(mcase, :admin=>true), :method=> :post , :confirm => 'Are you sure, want to make it inactive?'   if mcase.status != "inactive"
+              %li
+                = link_to  "Draft", draft_medical_case_path(mcase, :admin=>true), :method=> :post, :confirm => 'Are you sure, want to make it draft?'  if mcase.status != "draft"
+              %li
+                = link_to  "Pending", pending_medical_case_path(mcase, :admin=>true), :method=> :post, :confirm =>  'Are you sure, want to make it pending?'   if mcase.status != "pending"   and mcase.status != "draft"
+              %li
+                = link_to  "Approved", approved_medical_case_path(mcase, :admin=>true), :method=> :post, :confirm =>   'Are you sure, want to make it approved?'   if mcase.status != "approved" and mcase.status != "inactive" and  mcase.status != "draft"
+              %li
+                - if mcase.status != "approved" and current_user.id == mcase.creator_id
+                  %a{:class=>"edit_wizard", :id=>mcase.id } Edit
+        %td
+          = mcase.title
+        %td
+          = mcase.status.capitalize
+
+
+- else
+  %tr
+    %td{:colspan=>3}
+      .alert.alert-info{:style=>"text-align: center;"}
+        No records found

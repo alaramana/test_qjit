@@ -1,0 +1,7 @@
+=form_for [:admin, @race],:validate => true,:html => { :class => 'form-horizontal medical-org'} do |f|
+  .control-group
+    %label.control-label.required Name:
+    = f.text_field :name, :maxlength => 50, :class => 'input-xlarge'
+  .school-form
+    = f.submit "Save", :class => 'btn btn-primary'
+    = link_to "Cancel",  admin_races_path, :class => 'btn'

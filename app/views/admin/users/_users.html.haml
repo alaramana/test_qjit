@@ -1,0 +1,29 @@
+- unless @users.empty?
+  - @users.each do |user|
+    %tr
+      %td
+        - unless user.role_id==1 or user.id == current_user.id
+          .dropdown
+            %a.btn.dropdown-toggle(data-toggle="dropdown" href="#")
+              Action
+              %span.caret
+            %ul.dropdown-menu
+              %li
+                =link_to "View Detail", edit_admin_user_path(user) unless user.role_id==1 or user.id == current_user.id
+              %li.divider
+              %li
+                - unless user.active == false
+                  = link_to  content_tag(:i, '',  :class => "icon-remove-sign")+"Suspend User", "#", :class=>"status", :id => "#{user.id}", :title=>"#{set_title_to_active(user.active)}", :name=>"#{[user.firstname, user.lastname].join(" ") }"
+                -else
+                  = link_to  content_tag(:i, '', { :class => "icon-ok"})+"Activate User", "#", :class=>"status", :id => "#{user.id}", :title=>"#{set_title_to_active(user.active)}", :name=>"#{[user.firstname, user.lastname].join(" ") }"
+      %td= user.email
+      %td.wrap= user.full_name
+      %td= user.active? ? "Active" : "Inactive"
+      %td= display_time(user.last_sign_in_at) if user.last_sign_in_at.present?
+      %td.wrap{:title => user.medical_organization.name}= user.medical_organization.name
+
+- else
+  %tr
+    %td{:colspan=>6}
+      .alert.alert-info{:style=>"text-align: center;"}
+        No records found

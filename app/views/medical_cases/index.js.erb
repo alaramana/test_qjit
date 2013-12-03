@@ -1,0 +1,9 @@
+if ($('.modal-backdrop.fade.in').length==0){
+	$("#medical_cases").append("<%= j render('medical_cases')%>");
+	<% unless @medical_cases.last_page? %>
+	 $(".pagination").replaceWith("<%= j paginate @medical_cases %>");
+	<% else %>
+	 $('.pagination').remove();
+	<% end %>
+	$('.rateit5').rateit();	
+}

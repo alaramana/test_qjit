@@ -1,0 +1,20 @@
+%table
+    %thead
+        %tr
+            %th Last Name
+            %th First Name
+            %th Email
+            %th Total Questions
+            %th Total Comments
+            %th Total Ratings
+    %tbody
+    -@users.each do |user|
+        %tr
+            %td= user.lastname
+            %td= user.firstname
+            %td= user.email
+            %td= user.questions_count
+            %td= user.comments_count
+            %td= user.ratings_count
+
+

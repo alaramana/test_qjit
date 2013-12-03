@@ -1,0 +1,52 @@
+.contentcontainer.mcase_details
+  .headcontainer.mcase-header
+    .span3
+      =link_to " Return to Case Lists", medical_cases_path(params), :class=>"btn btn-primary"
+  .well
+    %span.pull-left= @medical_case.title
+    .pull-right  Case #: #{@medical_case.id}
+    %br/
+    %hr/
+    = render "details"
+    #accordion2.accordion
+      .accordion-group
+        .accordion-heading
+          %a.accordion-toggle.tags-list{"data-parent" => "#accordion2", "data-toggle" => "collapse", :href => "#collapseComment"}
+            %span.toggle [-]
+            Comments
+        #collapseComment.accordion-body.collapse.in
+          .accordion-inner
+            .tabbable
+              %ul.nav.nav-tabs
+                %li.active
+                  %a{"data-toggle" => "tab", :href => "#pane2"}
+                    = "Comments For This Case (#{@medical_case.comments.size})"
+              .tab-content
+                #pane2.tab-pane.active
+                  .rate-title
+                    Rate this case
+                  .rate-stars
+                    - if @medical_case.ratings.rated_by?(current_user.id)
+                      %div.rateit.rateit5{"data-rateit-min"=>"0", "data-rateit-value"=>"#{@medical_case.ratings.rating_for_user(current_user.id).rate}", :name=>@medical_case.id, :id=>"mcase_rate"}
+                    - else
+                      %div.rateit.rateit5{"data-rateit-min"=>"0", :name=>@medical_case.id, :id=>"mcase_rate"}
+                    %div#error-case
+                  .feedback
+                    = simple_form_for [@medical_case, Comment.new], :html=>{:novalidate=>true}, :remote=>true do |f|
+                      = hidden_field_tag :exam, "sparring_mode"
+                      %input{:type=>"hidden", :name=>"page", :value=>"#{params[:page].to_i+1}"}
+                      = f.input :comment,  :as=>"text" ,:required=>false ,:input_html=>{:rows=>"3"}, :label=>false, :placeholder=>"comment about this case"
+                      .offset4
+                        = f.submit "Add comment", :class=>"btn-primary btn btn-mini"
+                  %hr
+                  .community-case-comments
+                    -@medical_case.comments.each do |cmt|
+                      .details
+                        .field.span12
+                          %a.value= link_to cmt.user, "#"
+                          %span.belt.belt-red
+                          .value.fist.gray
+                          %div{:class=>"#{exam_medical_case_rating(@medical_case, cmt.user)}"}
+                          .pull-right= display_time(cmt.created_at,:B_e_Y)
+                          .message
+                            = cmt.comment

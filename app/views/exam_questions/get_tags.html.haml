@@ -1,0 +1,14 @@
+.modal-header
+  %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+  %h3#myModalLabel Tags
+.modal-body
+  - if @question.tags.empty?
+    %h5.c-text
+      %i No Tags
+  - else
+    - @question.tags.each do |com|
+      .span.tag-head
+        %span.tag
+          =com.name
+.modal-footer
+  %button.pull-center.btn.btn-danger.secondary.confirm{"aria-hidden" => "true", "data-dismiss" => "modal"} Close 

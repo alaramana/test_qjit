@@ -1,0 +1,59 @@
+=form_for [:admin, @objective],:validate => true,:html => { :class => 'form-horizontal medical-org objective-form'} do |f|
+  .control-group
+    %label.control-label.align-label.required Name:    
+    = f.text_field :name, :maxlength => 50, :class=>"label-align"
+  .control-group
+    %label.control-label.align-label.required Select a School:
+    = f.select :medical_organization_id, @available_organizations, { :prompt => '--Select a School--'}
+  .control-group
+    %label.control-label Description:
+    = f.text_area :description, :rows=>"2" 
+  .control-group
+    %label.control-label.required Start Date:
+    - canEditStart = @objective.start_date == nil || can_start_date_edit(@objective)
+    - canEditEnd = @objective.end_date == nil || @objective.status != "Closed"
+    - dateFormat = "MM/dd/yyyy HH:mm PP #{Time.now.in_time_zone.strftime("%Z")}"
+    .input-append.span4.datetimepicker{"data-start-date"=>display_time(Time.now), :class=>"#{'date' if canEditStart || !@objective.save }"}
+      -if canEditStart
+        = f.text_field :start_date, :'data-format' => dateFormat, :value=>"#{display_time(@objective.start_date, :datetime_picker) unless @objective.start_date.nil?}", :class=>"span3"
+      -elsif !@objective.save
+        = f.text_field :start_date, :'data-format' => dateFormat, :value=>"#{display_time(@objective.start_date, :datetime_picker) unless @objective.start_date.nil?}", :class=>"span3"
+      -else
+        = f.text_field :start_date, :'data-format' => dateFormat, :value=>"#{display_time(@objective.start_date, :datetime_picker)}", :class=>"span3", :readonly=>"readonly"
+      %span.add-on
+        %i.icon-calendar
+  .control-group
+    %label.control-label End Date:    
+    .input-append.span4.datetimepicker{:class=>("date" if canEditEnd)}
+      -if canEditEnd
+        = f.text_field :end_date, :'data-format' => dateFormat, :value=>"#{display_time(@objective.end_date, :datetime_picker) unless @objective.end_date.nil?}", :class=>"span3"
+      -else
+        = f.text_field :end_date, :'data-format' => dateFormat, :value=>"#{display_time(@objective.end_date, :datetime_picker)}", :class=>"span3", :readonly=>"readonly"
+      %span.add-on
+        %i.icon-calendar
+  - if !f.object.new_record?
+    -if f.object.status == "Open"  ||  f.object.status =="Pending"
+      .control-group
+        %label.control-label Hide Author:
+        = f.check_box :hide_author
+      .control-group
+        %label.control-label Hide Feedback:
+        = f.check_box :hide_feedback
+    -else
+      .control-group
+        %label.control-label Hide Author:
+        = f.check_box :hide_author, :disabled=>true
+      .control-group
+        %label.control-label Hide Feedback:
+        = f.check_box :hide_feedback, :disabled=>true
+  - else
+    .control-group
+      %label.control-label Hide Author:
+      = f.check_box :hide_author
+    .control-group
+      %label.control-label Hide Feedback:
+      = f.check_box :hide_feedback
+
+  .school-form
+    = f.submit "Save", :class => 'btn btn-primary obj_btn'
+    = link_to "Cancel",  admin_objectives_path, :class => 'btn'

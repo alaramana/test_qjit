@@ -1,0 +1,176 @@
+= simple_form_for @medical_case, :validate =>true, :html => { :class => 'form-horizontal medical_case_form' } do |f|
+  .modal-header
+    %button.close(type="button" data-dismiss="modal" aria-hidden="true") &times
+    %h3 Make a New Case
+  #next.demoarea
+    .modal-body
+      .row-fluid
+        .span3
+          %ul.nav.nav-list.nav-tabs.nav-stacked
+            %li.first-tab.active
+              %a(href="#general-case-info" data-toggle="tab")
+                %i.icon-chevron-right.pull-right
+                General Case Info
+            %li.disabled
+              %a(href="#medical-history" data-toggle="tab")
+                %i.icon-chevron-right.pull-right
+                Medical History
+            %li.disabled
+              %a(href="#review-of-systems" data-toggle="tab")
+                %i.icon-chevron-right.pull-right
+                Review of Systems
+            %li.disabled
+              %a(href="#labs-images-studies" data-toggle="tab")
+                %i.icon-chevron-right.pull-right
+                Labs, Images, Studies
+            %li.last-tab.disabled
+              %a(href="#add-tags" data-toggle="tab")
+                %i.icon-chevron-right.pull-right
+                Tags
+        .span9
+          .tab-content
+            #general-case-info.tab-pane.active
+              .form
+                .row-fluid
+                  .span2
+                    %label.muted.required Case Title
+                  .span10
+                    / %input.field.span12(type="text")
+                    = f.input :title , :required=>false, :label=>false,:input_html=>{class: "validate field span12"}
+                .row-fluid
+                  %h4#patient-overview.text-info Patient Overview
+                .row-fluid.text-area
+                  .span2
+                    %label.muted.required Age
+                    = f.input :age, :label=>false,:as =>"string", :required=>false,:input_html=>{class:"validate field span12", :min=>0 ,:max=>100}
+                  .span2.offset1
+                    %label.muted.required Gender
+                    = f.input :gender, :label=>false,prompt: "--select--", as: :select , :collection=>["Male", "Female"],:input_html=>{class: " validate field span12"}
+                  .span4.offset1
+                    %label.muted.required Race
+                    = f.association :race , :collection=>@active_races, prompt: "--select--", :label=>false, :input_html=>{class: "validate field span12"}
+                .row-fluid.text-area
+                  .span12
+                    %label.muted.required Chief Complaint
+                    = f.input :chief_complaint, :label=>false, :input_html=>{:rows=>"4", :class=>" validate field span12"}
+                .row-fluid.text-area
+                  .span12
+                    %label.muted.required History of Present Illness
+                    = f.input :history_of_present_illness, :label=>false, :input_html=>{:rows=>"4" , :class=>"validate field span12"}
+
+            #medical-history.tab-pane
+              = f.simple_fields_for :medical_history do |c|
+                .form
+                  .row-fluid
+                    .span12.text-area
+                      %label.muted Medications
+                      = c.input :medication, :label=>false, :input_html=>{:rows=>"3", :class=>"field span12"}
+                  .row-fluid
+                    .span12.text-area
+                      %label.muted Allergies
+                      = c.input :allergies, :label=>false, :input_html=>{:rows=>"3", :class=>"field span12" }
+                  .row-fluid
+                    .span12.text-area
+                      %label.muted Past Medical / Surgical History
+                      = c.input :past_medical_history, :label=>false, :input_html=>{:rows=>"3" , :class=>"field span12"}
+                  .row-fluid
+                    .span12.text-area
+                      %label.muted Family / Social History
+                      = c.input :family_history, :label=>false, :input_html=>{:rows=>"3", :class=>"field span12" }
+            #review-of-systems.tab-pane
+              = f.simple_fields_for :review do |review|
+                .form
+                  .row-fluid
+                    .span2.temp
+                      %label.muted Temp
+                      / %input.field.span10(type="number")
+                      = review.input :temperature, :label=>false, :input_html=>{:class=>"field span10", :min=>0 }
+                      %span.muted.muted-leter.pull-right F
+                    .span2.offset1.hr
+                      %label.muted HR
+                      / %input.field.span12(type="number")
+                      = review.input :heart_rate,:label=>false, :input_html=>{:class=>"field span10", :min=>0 }
+                    .span2.bp
+                      %label.muted BP
+                      / %input.field.span12(type="number")
+                      = review.input :blood_pressure,:label=>false, :input_html=>{:class=>"field span10" , :min=>0}
+                    .span2.offset1.rr
+                      %label.muted RR
+                      / %input.field.span10(type="number")
+                      = review.input :respiratory_rate, :label=>false, :input_html=>{:class=>"field span10", :min=>0 }
+                      %span.muted.muted-leter /
+                    .span2.sp02
+                      %label.muted
+                        Sp0<sub>2</sub>
+                      = review.input :spo2,:label=>false, :input_html=>{:class=>"field span10", :min=>0 }
+                  .row-fluid.physical-exam-desc
+                    %label.muted Physical Exam Description
+                    = review.input :physical_exam_description, as: :string,:label=>false, :input_html=>{:class=>"field span12" }
+                  .row-fluid.exam-details-header
+                    .span9
+                      %p.text-info Specific Exam Details
+                    .span3.text-right
+                      = link_to_add_table_fields  "+ Add Specific Detail",  review, :specific_exam_details
+                  %table.table.exam-detail
+                    %tbody#specific_exam_details
+                      = review.simple_fields_for :specific_exam_details do |e|
+                        = render 'specific_exam_detail_fields', :f => e
+            #labs-images-studies.tab-pane
+              .form
+                .row-fluid.lis-header.first
+                  .span9
+                    %p.text-info Labs
+                  .span3.text-right
+                    = link_to_add_table_fields  "+ Add Lab Result", f, :labs
+
+                %table.lis-detail.table
+                  %tbody#labs
+                    = f.simple_fields_for :labs do |lab|
+                      = render 'lab_fields', :f => lab
+                .row-fluid.lis-header
+                  .span9
+                    %p.text-info Imaging
+                  .span3.text-right
+                    = link_to_add_table_fields  "+ Add Imaging Results", f, :imagings
+                %table.lis-detail.table
+                  %tbody#imagings
+                    = f.simple_fields_for :imagings do |image|
+                      = render 'imaging_fields', :f => image
+                .row-fluid.lis-header
+                  .span9
+                    %p.text-info Other Studies
+                  .span3.text-right
+                    = link_to_add_table_fields "+ Add Study Item", f, :other_studies
+
+                %table.lis-detail.table
+                  %tbody#other_studies
+                    = f.simple_fields_for :other_studies do |other|
+                      = render 'other_study_fields', :f => other
+            #add-tags.tab-pane
+              .row-fluid
+                %h4.text-info Tags
+              .form
+                .row-fluid
+                  .span5.offset7.text-area
+                    = f.input :tag_list,:input_html => {:class => 'case_tag field span12' },:label =>false, :placeholder=>"add tag"
+                .row-fluid
+                  .span12
+                    %div.error_tag
+                    .case_others_list.tags-list
+                      =f.hidden_field :tag_list, :class=>'new-tag'
+                %input{:type=>"hidden", :name=>"search", :id=>"filter_results",  :value=>""}
+
+    .modal-footer
+      %a.cancel(data-dismiss="modal" aria-hidden="true") Cancel
+      .prev-next
+        %a.btn.btn-primary.prev.disabled(href="#")
+          %i.icon-chevron-left
+          Previous
+      //%a.btn.btn-primary.save-case(href="#" onclick="formSaveCase();") Save
+      %a.btn.btn-success.disabled(href="#" onclick="submitModelForm();") Submit
+      .prev-next
+        %a.btn.btn-primary.next(href="#")
+          Next
+          %i.icon-chevron-right
+
+

@@ -1,0 +1,42 @@
+.sectionpad
+  .tabbable
+    %ul.nav.nav-tabs
+      %li
+        =link_to "Users" , admin_users_path
+      %li
+        =link_to "Orgs" , admin_medical_organizations_path
+      %li
+        =link_to "Cases", user_cases_admin_users_path
+      %li
+        =link_to "Invitations", invitations_admin_users_path
+      %li.active
+        = link_to "Reports",admin_reports_path
+      %li
+        = link_to "Races",admin_races_path
+      %li
+        = link_to "Assignments",admin_objectives_path
+    .tab-content
+      #reports(class="tab-pane active")
+        .tabbable
+          %ul.nav.nav-tabs
+            %li.active
+              =link_to "Activity" , admin_reports_path
+            %li
+              =link_to "Contributions", user_submitted_cases_admin_reports_path
+            %li
+              =link_to "Exam Scores", user_test_admin_reports_path
+            %li
+              =link_to "Belt Levels", user_aggregate_admin_reports_path
+          .tab-content
+            #Invite(class="tab-pane active")
+              %h5 Activity
+              %table.table.table-striped
+                %thead
+                  %tr
+                    %th.span4 Name
+                    %th.span4 Email
+                    %th.c-text Number of Logins
+                    %th.c-text Average Browser Session Time
+                %tbody#users
+                  = render "users"
+              .none= paginate @users
